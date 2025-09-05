@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        {% if form.title.data %}
+                            <i class="bi bi-pencil-fill me-2"></i>Duyuruyu Düzenle
+                        {% else %}
+                            <i class="bi bi-plus-square-fill me-2"></i>Yeni Duyuru Oluştur
+                        {% endif %}
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" id="announcementForm" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {% if form.title.errors %}
+                                {{ form.title(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.title(class="form-control") }}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form.content.label(class="form-label") }}
+                            {% if form.content.errors %}
+                                {{ form.content(class="form-control is-invalid", rows="8") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.content(class="form-control", rows="8") }}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('announcement.announcements') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>İptal
+                    </a>
+                    <button type="submit" form="announcementForm" class="btn btn-primary">
+                        {% if form.title.data %}
+                            <i class="bi bi-check-circle-fill me-2"></i>Değişiklikleri Kaydet
+                        {% else %}
+                            <i class="bi bi-send-fill me-2"></i>Yayınla
+                        {% endif %}
+                    </button>
+                </div>
+
+            </div> </div>
+    </div>
+</div>
+{% endblock %}

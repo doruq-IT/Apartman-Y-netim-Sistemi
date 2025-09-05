@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}KVKK Aydınlatma Metni{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  {# Bu sayfanın "resmi" adresinin bu olduğunu arama motorlarına söyler #}
+  <link rel="canonical" href="{{ url_for('public.kvkk_text', _external=True) }}">
+{% endblock head %}
+
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="card p-4">
+
+    <h4>Kişisel Verilerin Korunması Kanunu (KVKK) Uyarınca Aydınlatma Metni</h4>
+    <p class="text-muted">
+      Bu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (“Kanun”) 10. maddesi kapsamında,
+      veri sorumlusu sıfatıyla Apartman Yönetim Sistemi (“FlatNetSite”) tarafından hazırlanmıştır.
+    </p>
+    <hr class="my-4">
+
+    <h5>1. Veri Sorumlusu</h5>
+    <p>
+      Kişisel verileriniz, Kanun uyarınca “Veri Sorumlusu” sıfatıyla
+      <strong>Okan KURTAR – Şahıs Şirketi</strong> tarafından işlenmektedir.
+    </p>
+    <ul>
+      <li><strong>Adres:</strong> Atatürk Mahallesi 3007 Sokak, Bluelife Sitesi, Edremit/Balıkesir</li>
+      <li><strong>Vergi Dairesi:</strong> Edremit Vergi Dairesi</li>
+      <li><strong>E-posta:</strong> <a href="mailto:flatnetsite@gmail.com">flatnetsite@gmail.com</a></li>
+      <li><strong>Telefon:</strong> +90 530 461 67 65</li>
+    </ul>
+
+    <h5>2. Kişisel Verilerinizin Toplanma Yöntemleri ve İşlenme Amaçları</h5>
+    <p>
+      FlatNetSite’yi kullanmanız kapsamında, aşağıdaki kişisel verileriniz belirtilen amaçlarla,
+      Kanun’un 5. maddesinde belirtilen “sözleşmenin kurulması veya ifası” ve “veri sorumlusunun hukuki
+      yükümlülüğünü yerine getirebilmesi” hukuki sebeplerine dayanılarak işlenmektedir:
+    </p>
+    <ul>
+      <li><strong>Kimlik Bilgileri:</strong> Adınız, Soyadınız (hesap oluşturma, iletişim, taleplerin yönetimi için)</li>
+      <li><strong>İletişim Bilgileri:</strong> E-posta adresi, telefon numarası (giriş, şifre sıfırlama, bildirim)</li>
+      <li><strong>Adres/Blok/Daire Bilgisi:</strong> Apartman, blok ve daire numarası (yönetim iletişimi, aidat takibi)</li>
+      <li><strong>Finansal Veriler:</strong> Aidat ödeme kayıtları, makbuzlar, fatura bilgileri (yasal muhasebe yükümlülükleri)</li>
+      <li><strong>Talep/Şikayet Verileri:</strong> Oluşturduğunuz taleplerin içeriği ve ek dosyalar</li>
+      <li><strong>Rezervasyon Verileri:</strong> Ortak alan kullanım talepleri (tarih, saat, kullanıcı bilgisi)</li>
+      <li><strong>IP Adresi ve Log Verileri:</strong> Giriş/çıkış zamanları ve güvenlik kayıtları</li>
+    </ul>
+    <p>
+      Özel nitelikli kişisel verileriniz (din, mezhep, etnik köken vb.) tarafımızca talep edilmemekte ve
+      işlenmemektedir.
+    </p>
+
+    <h5>3. Kişisel Verilerin Güvenliği</h5>
+    <p>
+      Kişisel verilerinizin yetkisiz erişime, kayba veya ifşaya karşı korunması için gerekli teknik ve idari
+      tedbirleri alıyoruz. Şifreler, endüstri standardı olan <strong>Bcrypt</strong> algoritması kullanılarak geri 
+      döndürülemez şekilde hash’lenmekte, veriler Google Cloud altyapısında güvenli şekilde saklanmaktadır. 
+      <strong>Ayrıca, sistem üzerinde gerçekleştirilen önemli işlemler (üyelik onayı, talep oluşturma, belge yükleme vb.) yasal kanıt niteliği taşıması amacıyla IP adresi ve zaman damgası ile birlikte kayıt altına alınmaktadır.</strong>
+    </p>
+    <h5>3.1. Olası Veri İhlallerinin Bildirimi</h5>
+    <p>
+      Tüm teknik ve idari tedbirlere rağmen, sistemlerimizde bir veri ihlali tespit edilmesi halinde, bu durum Kişisel Verileri Koruma Kurulu'na derhal ve yasal süreler içerisinde tarafımızca bildirilecektir. Ayrıca, ihlalden etkilendiği tespit edilen kullanıcılarımıza, riskleri ve alabilecekleri önlemleri açıklamamız gereken durumlarda, e-posta veya platform üzerinden doğrudan bilgilendirme yapılacaktır.
+    </p>
+
+    <h5>4. Kişisel Verilerin Saklanma Süresi</h5>
+    <p>
+      Kişisel verileriniz, ilgili mevzuatta öngörülen süreler saklı kalmak kaydıyla, işleme amacının ortadan
+      kalkması halinde derhal silinir, yok edilir veya anonim hale getirilir. Örneğin:
+    </p>
+    <ul>
+      <li>Aidat ve muhasebe kayıtları: 10 yıl</li>
+      <li>Destek talepleri ve iletişim kayıtları: 1 yıl</li>
+      <li>Rezervasyon ve talep kayıtları: 1 yıl</li>
+      <li>
+        <strong>Trafik Verileri (IP, Log Kayıtları):</strong> 5651 sayılı kanun uyarınca yasal yükümlülüğümüz gereği 2 yıl.
+      </li>
+    </ul>
+
+    <h5>5. Kişisel Verilerin Aktarılması</h5>
+    <p>
+      Kişisel verileriniz, yalnızca hizmetin sağlanması ve yasal yükümlülüklerin yerine getirilmesi amacıyla
+      şu taraflarla paylaşılabilir:
+    </p>
+    <ul>
+      <li>Barındırma ve veritabanı hizmeti sağlayıcıları (Google Cloud)</li>
+      <li>E-posta ve bildirim servisleri</li>
+      <li>Yasal merciler (mahkeme, savcılık vb.) – yalnızca zorunlu hallerde</li>
+    </ul>
+    <p>
+      Verileriniz Google Cloud’un Avrupa Birliği sınırları içindeki veri merkezlerinde
+      <strong>europe-west1 (Belçika)</strong> bölgesinde saklanmakta olabilir. Türkiye dışına veri aktarımı durumunda,
+      aktarım KVKK’nın 9. maddesi kapsamında <em>uygun güvenceler</em> (örneğin Kurul tarafından ilan edilen
+      standart sözleşme hükümleri) sağlanarak gerçekleştirilir ve gerekli güvenlik önlemleri alınır.
+      E-posta/bildirim servisleri yurt dışında yer alıyorsa, bu hizmetler üzerinden yapılan aktarım da aynı ilkelere tabidir.
+    </p>
+
+    <h5>6. Veri Sahibi Olarak Haklarınız</h5>
+    <p>Kanun’un 11. maddesi uyarınca sahip olduğunuz haklar şunlardır:</p>
+    <ul>
+      <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme,</li>
+      <li>İşlenmişse buna ilişkin bilgi talep etme,</li>
+      <li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+      <li>Eksik veya yanlış işlenmişse düzeltilmesini isteme,</li>
+      <li>Kanunda öngörülen şartlar çerçeşinde silinmesini veya yok edilmesini isteme,</li>
+      <li>Aktarıldığı üçüncü kişileri bilme,</li>
+      <li>Kanuna aykırı işleme sebebiyle zarara uğramanız hâlinde tazminat talep etme.</li>
+    </ul>
+
+    <h5>7. Haklarınızı Kullanma Yöntemi</h5>
+    <p>
+      Bu haklarınızı kullanmak için <a href="mailto:flatnetsite@gmail.com">flatnetsite@gmail.com</a> adresine
+      e-posta gönderebilir veya sitemizde yer alan iletişim formu üzerinden başvuruda bulunabilirsiniz.
+      Başvurularınız en geç 30 gün içinde yanıtlanacaktır. <strong>FlatNetSite, başvuruda bulunan kişinin gerçekten hak sahibi olduğundan 
+      emin olmak amacıyla ek doğrulama bilgileri (örneğin, sisteme kayıtlı telefon numarasına kod gönderme gibi) talep etme hakkını saklı tutar.</strong>
+    </p>
+
+    <h5>8. VERBİS Bilgilendirmesi</h5>
+    <p>
+      6698 sayılı KVKK’nın 16. maddesi kapsamında, mevcut faaliyet ölçeğimiz itibarıyla VERBİS’e kayıt
+      yükümlülüğümüz bulunmamaktadır. Faaliyet koşullarımızda değişiklik olması (örneğin çalışan sayısı veya
+      mali bilanço eşiklerinin aşılması ya da özel nitelikli kişisel veri işlenmeye başlanması) halinde bu durum
+      güncellenecektir.
+    </p>
+    <p class="text-sm text-muted"><em>Son Güncelleme: 4 Eylül 2025</em></p>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Genel Borç Durum Panosu{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>Genel Borç Durum Panosu
+            </h4>
+            <p class="text-muted mb-0 small mt-1">Geçmiş veya güncel, ödenmemiş aidat borcu bulunan sakinlerin listesi.</p>
+        </div>
+
+        <div class="card-body">
+            {% if debtors %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Sakin Adı</th>
+                                <th scope="col" class="text-center">Borçlu Ay Sayısı</th>
+                                <th scope="col">Borçlu Olduğu Dönemler</th>
+                                <th scope="col" class="text-end">Toplam Borç Tutarı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for debtor in debtors %}
+                            <tr>
+                                <td><strong>{{ debtor.name }}</strong></td>
+                                <td class="text-center">
+                                    <span class="badge bg-danger rounded-pill fs-6">{{ debtor.unpaid_periods|length }} Ay</span>
+                                </td>
+                                <td>
+                                    {{ debtor.unpaid_periods|join(', ') }}
+                                </td>
+                                <td class="text-end fw-bold text-danger">
+                                    ₺{{ "%.2f"|format(debtor.total_debt) }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-success text-center">
+                    <h4 class="alert-heading"><i class="bi bi-patch-check-fill"></i> Mükemmel Durum!</h4>
+                    <p class="mb-0">Ödenmemiş aidat borcu olan herhangi bir sakin bulunmamaktadır.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

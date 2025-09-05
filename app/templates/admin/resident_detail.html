@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{{ resident.name }} - Sakin Detayları{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Sakin Detayları</h4>
+                <a href="{{ url_for('admin.list_residents') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left-circle me-2"></i>Tüm Sakinlere Geri Dön
+                </a>
+            </div>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-badge-fill me-2"></i>{{ resident.name }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">E-posta Adresi:</dt>
+                        <dd class="col-sm-9">{{ resident.email }}</dd>
+
+                        <dt class="col-sm-3">Telefon Numarası:</dt>
+                        <dd class="col-sm-9">
+                            {% if resident.phone_number %}
+                                {{ resident.phone_number }}
+                            {% else %}
+                                <span class="text-muted"><i>Belirtilmemiş</i></span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-3">Kayıt Tarihi:</dt>
+                        <dd class="col-sm-9">
+                            {% if resident.created_at %}
+                                {{ resident.created_at.strftime('%d %B %Y') }}
+                            {% else %}
+                                Bilgi Yok
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-folder-fill me-2"></i>Sakine Ait Yüklenmiş Belgeler
+                    </h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% if documents %}
+                        {% for doc in documents %}
+                            <a href="{{ url_for('document.download_document', document_id=doc.id) }}" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-file-earmark-text me-3"></i>
+                                    <strong>{{ doc.doc_type }}</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">{{ doc.upload_date.strftime('%d-%m-%Y') }}</span>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-group-item">
+                            <p class="text-muted mb-0">Bu sakine ait yüklenmiş herhangi bir belge bulunmamaktadır.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

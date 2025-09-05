@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Kullanıcı Yönetimi{% endblock %}
+
+{% block content %}
+<div id="all-blocks-data" style="display: none;">
+    {% for block in blocks %}
+        <option value="{{ block.id }}" data-apartment-id="{{ block.apartment_id }}">{{ block.name }}</option>
+    {% endfor %}
+</div>
+
+
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center card-header-responsive">
+                <h4 class="mb-0">
+                    <i class="bi bi-people-fill me-2"></i>Kullanıcı ve Rol Yönetimi
+                </h4>
+                <a href="{{ url_for('superadmin.add_apartment') }}" class="btn btn-primary">
+                    <i class="bi bi-building-fill-add me-2"></i>Yeni Apartman Ekle
+                </a>
+            </div>
+            <p class="text-muted mb-0 small mt-1">Sistemdeki kullanıcıların rollerini ve atandıkları apartman/blokları yönetin.</p>
+        </div>
+
+        <div class="card-body">
+            
+            <div class="filter-form bg-light p-3 rounded mb-4 border">
+                <form method="GET" action="{{ url_for('superadmin.user_management') }}">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="search_query" class="form-label">İsim veya E-posta</label>
+                            <input type="text" name="search_query" id="search_query" class="form-control" placeholder="Aramak için yazın..." value="{{ search_args.get('search_query', '') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="apartment_filter" class="form-label">Apartman</label>
+                            <select name="apartment_filter" id="apartment_filter" class="form-select">
+                                <option value="">Tümü</option>
+                                {% for apt in apartments %}
+                                    <option value="{{ apt.id }}" {% if search_args.get('apartment_filter') == apt.id|string %}selected{% endif %}>{{ apt.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="role_filter" class="form-label">Rol</label>
+                            <select name="role_filter" id="role_filter" class="form-select">
+                                <option value="">Tümü</option>
+                                <option value="admin" {% if search_args.get('role_filter') == 'admin' %}selected{% endif %}>Yönetici</option>
+                                <option value="resident" {% if search_args.get('role_filter') == 'resident' %}selected{% endif %}>Sakin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-grid gap-2 d-md-flex">
+                                <button type="submit" class="btn btn-info flex-grow-1"><i class="bi bi-search"></i> Ara</button>
+                                <a href="{{ url_for('superadmin.user_management') }}" class="btn btn-secondary" title="Filtreyi Temizle"><i class="bi bi-x-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {% if not is_search_active and users %}
+            <div class="alert alert-primary" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>Filtreleme yapılmadı. Şu an sadece sisteme en son eklenen kullanıcılar gösterilmektedir.
+            </div>
+            {% endif %}
+
+
+            {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ad Soyad</th>
+                                <th>E-posta</th>
+                                <th>Atandığı Yer</th>
+                                <th class="text-center">Mevcut Rol</th>
+                                <th style="width: 45%;">Yeni Atama</th>
+                                <th class="text-center">Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td><strong>{{ user.name }}</strong></td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% if user.apartment %}
+                                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">{{ user.apartment.name }}</span>
+                                        
+                                        {% if user.block %}
+                                            <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle mt-1">{{ user.block.name }}</span>
+                                        {% endif %}
+                                        
+                                        {% if user.daire_no %}
+                                            <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle mt-1">Daire: {{ user.daire_no }}</span>
+                                        {% endif %}
+                                        {% else %}
+                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Atanmamış</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge fs-6
+                                        {% if user.role == 'admin' %} bg-success-subtle text-success-emphasis border border-success-subtle
+                                        {% elif user.role == 'resident' %} bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle
+                                        {% else %} bg-light text-dark {% endif %}">
+                                        {{ user.role|capitalize }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('superadmin.update_user_attributes', user_id=user.id) }}" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <div class="input-group">
+                                            <select name="apartment_id" class="form-select apartment-select" data-user-id="{{ user.id }}">
+                                                <option value="0">Apartman Seçin</option>
+                                                {% for apt in apartments %}
+                                                <option value="{{ apt.id }}" {% if user.apartment_id == apt.id %}selected{% endif %}>{{ apt.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            
+                                            <select name="block_id" id="block-select-{{ user.id }}" class="form-select" data-selected-block="{{ user.block_id or '0' }}" disabled>
+                                                <option value="0">Blok Seçin</option>
+                                            </select>
+                                            
+                                            <select name="role" class="form-select">
+                                                <option value="resident" {% if user.role == 'resident' %}selected{% endif %}>Sakin</option>
+                                                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Yönetici</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-check-lg"></i> Güncelle
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td class="text-center">
+                                    <form action="{{ url_for('superadmin.delete_user', user_id=user.id) }}" method="POST" onsubmit="return confirm('`{{ user.name }}` adlı kullanıcıyı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Kullanıcıyı Sil">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if pagination and pagination.pages > 1 %}
+                <nav aria-label="Kullanıcı Sayfaları" class="mt-4 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('superadmin.user_management', page=pagination.prev_num, search_query=request.args.get('search_query'), apartment_filter=request.args.get('apartment_filter'), role_filter=request.args.get('role_filter')) }}">&laquo;</a>
+                        </li>
+                        
+                        {% for page_num in pagination.iter_pages() %}
+                            {% if page_num %}
+                                <li class="page-item {% if pagination.page == page_num %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('superadmin.user_management', page=page_num, search_query=request.args.get('search_query'), apartment_filter=request.args.get('apartment_filter'), role_filter=request.args.get('role_filter')) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('superadmin.user_management', page=pagination.next_num, search_query=request.args.get('search_query'), apartment_filter=request.args.get('apartment_filter'), role_filter=request.args.get('role_filter')) }}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <p class="mb-0">
+                        {% if is_search_active %}
+                            Aradığınız kriterlere uygun kullanıcı bulunamadı.
+                        {% else %}
+                            Lütfen bir kullanıcı aramak veya listelemek için yukarıdaki filtreleri kullanın.
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }} 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ... Dinamik blok dropdown scripti aynı, değişiklik yok ...
+    const apartmentSelects = document.querySelectorAll('.apartment-select');
+    const allBlockOptions = document.querySelector('#all-blocks-data').innerHTML;
+
+    apartmentSelects.forEach(function(apartmentSelect) {
+        function updateBlockDropdown() {
+            const selectedApartmentId = apartmentSelect.value;
+            const userId = apartmentSelect.dataset.userId;
+            const blockSelect = document.getElementById('block-select-' + userId);
+            const previouslySelectedBlockId = blockSelect.dataset.selectedBlock;
+            blockSelect.innerHTML = '<option value="0">Blok Seçin</option>';
+
+            if (selectedApartmentId && selectedApartmentId !== '0') {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = allBlockOptions;
+                const filteredOptions = tempDiv.querySelectorAll(`option[data-apartment-id="${selectedApartmentId}"]`);
+
+                if (filteredOptions.length > 0) {
+                    filteredOptions.forEach(function(opt) {
+                        blockSelect.appendChild(opt.cloneNode(true));
+                    });
+                    blockSelect.value = previouslySelectedBlockId;
+                    blockSelect.disabled = false;
+                } else {
+                    blockSelect.disabled = true;
+                }
+            } else {
+                blockSelect.disabled = true;
+            }
+        }
+        apartmentSelect.addEventListener('change', updateBlockDropdown);
+        updateBlockDropdown();
+    });
+});
+</script>
+{% endblock %}

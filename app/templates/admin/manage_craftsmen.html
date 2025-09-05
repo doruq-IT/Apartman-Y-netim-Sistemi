@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{# Eğer form render için bir makronuz varsa, onu import edebilirsiniz.
+   Örn: {% from '_form_macros.html' import render_field %} #}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">{{ title }}</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Yeni Usta Ekle</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }} 
+                        
+                        <div class="form-group mb-3">
+                            {{ form.specialty.label(class="form-label") }}
+                            {{ form.specialty(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.full_name.label(class="form-label") }}
+                            {{ form.full_name(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.phone_number.label(class="form-label") }}
+                            {{ form.phone_number(class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ form.notes.label(class="form-label") }}
+                            {{ form.notes(class="form-control") }}
+                        </div>
+                        
+                        {{ form.submit(class="btn btn-primary w-100") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Kayıtlı Ustalar</h5>
+                </div>
+                <div class="card-body">
+                    {% if craftsmen %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Uzmanlık Alanı</th>
+                                    <th scope="col">Adı Soyadı</th>
+                                    <th scope="col">Telefon</th>
+                                    <th scope="col">Notlar</th>
+                                    <th scope="col">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for craftsman in craftsmen %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ craftsman.specialty }}</td>
+                                    <td>{{ craftsman.full_name }}</td>
+                                    <td>{{ craftsman.phone_number }}</td>
+                                    <td>{{ craftsman.notes or '-' }}</td>
+                                    <td>
+                                        <form action="{{ url_for('admin.delete_craftsman', craftsman_id=craftsman.id) }}" method="POST" onsubmit="return confirm('Bu ustayı silmek istediğinizden emin misiniz?');">
+                                            {{ csrf_form.hidden_tag() }}
+                                            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info" role="alert">
+                        Henüz hiç usta eklenmemiş. Yandaki formu kullanarak ilk ustayı ekleyebilirsiniz.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

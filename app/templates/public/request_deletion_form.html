@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_form_macros.html" import render_field %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0">{{ title }}</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p>Hesabınızı silme sürecini başlatmak için lütfen sisteme kayıtlı e-posta adresinizi girin. Adresinize, silme işlemini onaylamanız için bir link gönderilecektir.</p>
+                    <hr>
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        {{ render_field(form.email) }}
+                        <div class="d-grid mt-3">
+                            {{ form.submit(class="btn btn-danger") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

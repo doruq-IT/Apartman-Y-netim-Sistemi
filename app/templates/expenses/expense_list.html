@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Genel Giderler{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center card-header-responsive">
+                <h4 class="mb-0">
+                    <i class="bi bi-receipt me-2"></i>Apartman Genel Giderleri
+                </h4>
+                {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                <a href="{{ url_for('admin.add_expense') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Yeni Masraf Ekle
+                </a>
+                {% endif %}
+            </div>
+            <p class="text-muted mb-0 small mt-1">Tüm sakinlerin ortak şeffaflığı için yapılan harcamaların listesi. (Toplam Kayıt: {{ expenses|length }})</p>
+        </div>
+
+        <div class="card-body">
+            {% if expenses %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Masraf Tarihi</th>
+                                <th scope="col">Açıklama</th>
+                                <th scope="col" class="text-end">Tutar</th>
+                                <th scope="col" class="text-center">Fatura/Fiş</th>
+                                <!-- <-- YENİ EKLENEN SÜTUN BAŞLIĞI -->
+                                <th scope="col" class="text-center">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                            <tr>
+                                <td>{{ expense.expense_date.strftime('%d.%m.%Y') }}</td>
+                                <td style="white-space: pre-wrap;">{{ expense.description }}</td>
+                                <td class="text-end fw-bold">₺{{ "%.2f"|format(expense.amount) }}</td>
+                                <td class="text-center">
+                                    {% if expense.invoice_filename %}
+                                        <!-- GÜNCELLEME: Link artık doğrudan GCS URL'ine yönlendiriyor -->
+                                        <a href="{{ expense.invoice_filename }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-eye-fill me-1"></i>Görüntüle
+                                        </a>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Fatura Yok</span>
+                                    {% endif %}
+                                </td>
+                                <!-- <-- YENİ EKLENEN SÜTUN VE BUTON -->
+                                <td class="text-center">
+                                    {% if current_user.role == 'admin' %}
+                                    <a href="{{ url_for('expense.edit_expense', expense_id=expense.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil-square me-1"></i>Düzenle / Fatura Ekle
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Henüz Masraf Kaydı Yok</h4>
+                    <p class="mb-0">Sistemde kayıtlı herhangi bir genel gider bulunmamaktadır.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

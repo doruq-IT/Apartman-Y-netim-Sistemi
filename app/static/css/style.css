@@ -1,0 +1,269 @@
+/* style.css – AYS için Özel Stiller */
+
+/* =================================================================
+   1. Kök Değişkenler ve Genel Stiller
+================================================================= */
+
+:root {
+    --primary-color: #4f46e5;      /* Indigo 600 */
+    --primary-color-dark: #4338ca; /* Indigo 700 */
+    --secondary-color: #6b7280;   /* Gray 500 */
+    --body-bg: #f8f9fa;           /* Açık Gri */
+    --font-family: 'Inter', sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--body-bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 70px; 
+}
+
+main {
+    flex: 1; 
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* =================================================================
+   2. Navigasyon Barı Stilleri (GÜNCELLENDİ)
+================================================================= */
+
+.navbar-translucent {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.navbar .nav-link {
+    color: #4a5568; 
+    font-weight: 500; 
+    /* YENİ: Daha yumuşak geçişler için */
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem; /* İç boşluğu ayarlıyoruz */
+    border-radius: 0.375rem; /* Kenarları yuvarlatıyoruz */
+    margin: 0 0.125rem; /* Linkler arasına hafif boşluk */
+}
+
+/* --- YENİ EKLENEN STİLLER --- */
+/* Fareyle üzerine gelindiğinde VEYA link aktif olduğunda (o sayfadayken) */
+.navbar .nav-link:hover, 
+.navbar .nav-link.active {
+    color: #ffffff; /* Yazı rengi beyaz olacak */
+    background-color: var(--primary-color); /* Arka plan rengi ana rengimiz olacak */
+    transform: translateY(-2px); /* Hafif yukarı kalkma efekti */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* İnce bir gölge */
+}
+/* --- --- */
+
+.navbar .navbar-brand {
+    color: var(--primary-color-dark) !important;
+}
+
+.dropdown-item:active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+
+/* ... CSS dosyanızın geri kalanı olduğu gibi kalabilir ... */
+/* =================================================================
+   3. Buton ve Form Elemanları
+================================================================= */
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-dark);
+    border-color: var(--primary-color-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* =================================================================
+   4. Kart (Card) ve Kutu Stilleri
+================================================================= */
+
+.card {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* =================================================================
+   5. Dashboard Sayfası Özel Stilleri
+================================================================= */
+
+.quick-access-card {
+    display: block;
+    padding: 2rem 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #343a40;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e9ecef;
+    height: 100%;
+}
+
+.quick-access-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.quick-access-card i {
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.quick-access-card:hover i {
+    transform: scale(1.1);
+}
+
+.list-group-item-action:hover {
+    background-color: #f8f9fa;
+}
+.welcome-alert {
+    background-color: #e9f5ff;
+    border: 1px solid #bde0fe;
+    color: #0c5460;
+}
+
+.welcome-alert .alert-heading {
+    color: #0a435c;
+}
+.admin-announcement {
+    background-color: #e3f2fd !important;
+    border-left: 4px solid #1976d2;
+}
+
+/* =================================================================
+   6. Footer
+================================================================= */
+
+.footer {
+    border-top: 1px solid #e7e7e7;
+}
+
+/* =================================================================
+   7. Mobil Takvim Dokunma Sorunu Çözümü
+================================================================= */
+#calendar {
+    touch-action: none;
+}
+/* ===== YÜKLENME ANİMASYONU STİLLERİ ===== */
+
+/* Tüm ekranı kaplayan yarı şeffaf katman */
+#loader-overlay {
+    position: fixed; /* Sayfa kaysa bile yerinde kalır */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7); /* Hafif beyaz, yarı şeffaf arka plan */
+    z-index: 9999; /* Her şeyin üstünde olmasını sağlar */
+    display: none; /* Varsayılan olarak gizli */
+    justify-content: center; /* İçindeki animasyonu yatayda ortalar */
+    align-items: center; /* İçindeki animasyonu dikeyde ortalar */
+    backdrop-filter: blur(4px); /* Arka planı hafifçe bulanıklaştırır (modern tarayıcılar için) */
+}
+
+/* Yükleniyor animasyonunun kendisi */
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* Halkanın gri arka planı */
+    border-top: 5px solid #764ba2; /* Sitenizin rengiyle uyumlu dönen kısım (mor) */
+    border-radius: 50%; /* Daire şekli verir */
+    animation: spin 1s linear infinite; /* Animasyon tanımı */
+}
+
+/* Dönme animasyonu */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =================================================================
+   8. Responsive Stiller (Mobil ve Tablet - 992px altı) - GÜNCELLENDİ
+================================================================= */
+@media (max-width: 991.98px) {
+    /* Mobilde açılan navbar menüsünün arkaplanı ve dolgusu */
+    .navbar-collapse {
+        margin-top: 0.5rem;
+        padding: 1rem;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+    }
+
+    /* Her bir menü linkini büyük, dokunulabilir bir butona dönüştür */
+    .navbar-nav .nav-link, 
+    .navbar-nav .dropdown-toggle {
+        font-size: 1.1rem; /* Yazı boyutunu büyüt */
+        padding: 0.8rem 1rem; /* İç boşluğu artır */
+        display: flex; /* İkon ve metni yan yana hizala */
+        align-items: center;
+        border-radius: 0.375rem; /* Kenarları yuvarlat */
+        margin-bottom: 0.25rem; /* Butonlar arasına boşluk koy */
+    }
+    
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .dropdown-toggle:hover {
+         background-color: rgba(255, 255, 255, 0.1); /* Üzerine gelince arkaplan rengi ver */
+         color: white;
+    }
+    
+    /* Açılır menüleri (Yönetim Paneli) mobil görünüme uyarla */
+    .navbar-nav .dropdown-menu {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        margin-top: 0.25rem;
+    }
+
+    .navbar-nav .dropdown-item {
+        color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem 0.8rem 2.5rem; /* İçeriye girintili yap */
+        font-size: 1rem;
+    }
+    
+    .navbar-nav .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    .card-header-responsive {
+        flex-direction: column; /* Elemanları alt alta dizer */
+        align-items: flex-start; /* Elemanları sola yaslar */
+        gap: 0.75rem; /* Alt alta gelen elemanlar arasına boşluk koyar */
+    }
+    
+}
+@media (max-width: 767.98px) {
+    /* Takvim başlık çubuğunu dikeyde hizala ve araya boşluk koy */
+    .fc .fc-toolbar.fc-header-toolbar {
+        flex-direction: column;
+        align-items: center; /* Butonları ve başlığı ortala */
+        gap: 15px; /* Dikey elemanlar arasına boşluk */
+    }
+
+    /* Başlık yazısının boyutunu küçült */
+    .fc .fc-toolbar-title {
+        font-size: 1.2rem;
+    }
+    
+    /* Takvimdeki genel yazı boyutunu ayarla */
+    .fc {
+        font-size: 0.9rem;
+    }
+}

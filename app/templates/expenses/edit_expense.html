@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{# Artık _form_macros.html dosyasına ihtiyacımız yok, bu satırı silebilir veya bırakabilirsiniz. #}
+
+{% block title %}Gideri Düzenle{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Gideri Düzenle / Fatura Ekle
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <!-- Düzenlenen Gider Bilgileri -->
+                    <div class="mb-4 p-3 bg-light rounded border">
+                        <h5 class="card-title">Düzenlenen Gider Bilgileri</h5>
+                        <p class="card-text mb-1"><strong>Açıklama:</strong> {{ expense.description }}</p>
+                        <p class="card-text mb-1"><strong>Tutar:</strong> ₺{{ "%.2f"|format(expense.amount) }}</p>
+                        <p class="card-text mb-0"><strong>Tarih:</strong> {{ expense.expense_date.strftime('%d.%m.%Y') }}</p>
+                        {% if expense.invoice_filename %}
+                            <hr>
+                            <p class="mb-0">
+                                <strong>Mevcut Fatura:</strong> 
+                                <a href="{{ expense.invoice_filename }}" target="_blank">Görüntüle <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Fatura Yükleme Formu -->
+                    <form method="POST" action="" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.invoice.label(class="form-label fw-bold") }}
+                            
+                            {% if form.invoice.errors %}
+                                {{ form.invoice(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.invoice.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.invoice(class="form-control") }}
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('expense.expense_list') }}" class="btn btn-secondary">İptal</a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

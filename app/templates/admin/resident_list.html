@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title or "Sakinler Listesi" }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="bi bi-people-fill me-2"></i>{{ title or "Apartman Sakinleri" }}
+            </h4>
+            <span class="badge bg-primary rounded-pill">{{ residents|length }} Sakin Bulundu</span>
+        </div>
+        <div class="card-body"> <div class="filter-form bg-light p-3 rounded mb-4 border">
+                <form method="GET" action="{{ url_for('admin.list_residents') }}">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <label for="search_query" class="form-label">İsim veya E-posta</label>
+                            <input type="text" name="search_query" id="search_query" class="form-control" placeholder="Aramak için yazın..." value="{{ search_args.get('search_query', '') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="block_filter" class="form-label">Blok</label>
+                            <select name="block_filter" id="block_filter" class="form-select">
+                                <option value="">Tümü</option>
+                                {% for block in blocks %}
+                                    <option value="{{ block.id }}" {% if search_args.get('block_filter') == block.id|string %}selected{% endif %}>{{ block.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-grid gap-2 d-md-flex">
+                                <button type="submit" class="btn btn-info flex-grow-1"><i class="bi bi-search"></i> Ara</button>
+                                <a href="{{ url_for('admin.list_residents') }}" class="btn btn-secondary" title="Filtreyi Temizle"><i class="bi bi-x-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% if not residents %}
+                <div class="alert alert-warning m-3 text-center" role="alert">
+                    {% if search_args %}
+                        Aradığınız kriterlere uygun bir sakin bulunamadı.
+                    {% else %}
+                        Bu apartmanda henüz kayıtlı bir sakin bulunmamaktadır.
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col" class="ps-3">Ad Soyad</th>
+                                <th scope="col">E-posta</th>
+                                <th scope="col">Blok</th>
+                                <th scope="col">Daire No</th> <th scope="col" class="text-center">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resident in residents %}
+                            <tr>
+                                <td class="ps-3 align-middle">
+                                    <i class="bi bi-person-circle me-2 text-secondary"></i>
+                                    {{ resident.name }}
+                                </td>
+                                <td class="align-middle">{{ resident.email }}</td>
+                                <td class="align-middle">
+                                    {% if resident.block %}
+                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle">{{ resident.block.name }}</span>
+                                    {% else %}
+                                        <span class="text-muted small"><i>Belirtilmemiş</i></span>
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">
+                                    {% if resident.daire_no %}
+                                        <strong>{{ resident.daire_no }}</strong>
+                                    {% else %}
+                                        <span class="text-muted small"><i>-</i></span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ url_for('admin.view_resident_details', user_id=resident.id) }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-folder2-open me-1"></i>Detaylar / Belgeler
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

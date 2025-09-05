@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hesap Silme Talebi Onayı</title>
+</head>
+<body>
+    <p>Merhaba {{ user.name }},</p>
+    <p>
+        Hesabınızı silmek için bir talepte bulundunuz. Bu işlemi onaylamak için lütfen aşağıdaki linke tıklayın. Bu link 30 dakika boyunca geçerli olacaktır.
+    </p>
+    <p>
+        <a href="{{ delete_url }}">HESABIMI SİL</a>
+    </p>
+    <p>
+        Eğer bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz. Hesabınız güvendedir.
+    </p>
+    <p>
+        Teşekkürler,<br>
+        {{ config.MAIL_FROM_NAME }} Ekibi
+    </p>
+</body>
+</html>

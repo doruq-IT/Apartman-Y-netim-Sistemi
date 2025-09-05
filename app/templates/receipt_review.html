@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Onay Bekleyen Makbuzlar{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="bi bi-patch-check-fill me-2"></i>Onay Bekleyen Makbuzlar
+            </h4>
+            <span class="badge bg-warning text-dark rounded-pill">{{ dues_list|length }} Adet</span>
+        </div>
+        <div class="card-body p-0">
+            {% if not dues_list %}
+                <div class="alert alert-success text-center m-3">
+                    <h4 class="alert-heading"><i class="bi bi-check-circle-fill"></i> Harika!</h4>
+                    <p class="mb-0">Onay bekleyen herhangi bir makbuz bulunmamaktadır.</p>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col" class="ps-3">Dönem</th>
+                                <th scope="col">Sakin</th>
+                                <th scope="col" class="text-end">Tutar</th>
+                                <th scope="col">Yüklenme Tarihi</th>
+                                <th scope="col" class="text-center">Makbuz</th>
+                                <th scope="col" class="text-center">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dues in dues_list %}
+                            <tr>
+                                <td class="ps-3"><strong>{{ dues.description }}</strong></td>
+                                <td>{{ dues.user.name }}</td>
+                                <td class="text-end fw-bold">₺{{ "%.2f"|format(dues.amount) }}</td>
+                                <td>{{ dues.receipt_uploaded_at.strftime('%d.%m.%Y %H:%M') if dues.receipt_uploaded_at else 'Bilinmiyor' }}</td>
+                                <td class="text-center">  
+                                    {% if dues.receipt_filename %}
+                                        <a href="{{ dues.receipt_filename }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-eye-fill me-1"></i>Görüntüle
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">Yok</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <form method="POST" action="{{ url_for('admin.approve_receipt', dues_id=dues.id) }}" class="d-inline">
+                                        {{ form.csrf_token }}
+                                        <button type="submit" class="btn btn-success btn-sm" title="Ödemeyi Onayla">
+                                            <i class="bi bi-check-lg me-1"></i>Onayla
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

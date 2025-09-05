@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Hakkımızda{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  {# Bu sayfanın "resmi" adresinin bu olduğunu arama motorlarına söyler #}
+  <link rel="canonical" href="{{ url_for('public.about_us_page', _external=True) }}">
+{% endblock head %}
+
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="card p-4">
+
+    <h4>Hakkımızda</h4>
+    <p>
+      Apartman Yönetim Sistemi, apartman sakinlerinin günlük yaşamını kolaylaştırmak amacıyla geliştirilen
+      modern ve kullanıcı dostu bir platformdur.
+    </p>
+
+    <hr>
+
+    <h5>Vizyonumuz</h5>
+    <p>
+      Komşuluk ilişkilerini güçlendiren, şeffaf ve etkili bir yönetim yapısı oluşturmaktır.
+    </p>
+
+    <h5>Misyonumuz</h5>
+    <p>
+      Aidat ödemelerinden duyurulara, arıza bildirimlerinden toplantı planlamalarına kadar tüm süreçleri
+      dijitalleştirerek apartman hayatını daha konforlu hale getirmek.
+    </p>
+
+    <h5>Neden Bu Sistem?</h5>
+    <ul>
+      <li>Kağıt-kalem dönemi sona erdi.</li>
+      <li>Mobil cihazlarla her yerden erişim.</li>
+      <li>Şeffaf ve güvenilir işlem kayıtları.</li>
+      <li>Yönetim ve sakinler arasında etkili iletişim.</li>
+    </ul>
+
+    <h5>Geliştirici Hakkında</h5>
+    <p>
+      Bu sistem, kullanıcı deneyimi odaklı çalışan geliştiriciler tarafından oluşturulmuştur. Geri bildirimleriniz
+      bizim için çok değerlidir.
+    </p>
+
+    <p>
+      Destek ve işbirliği için <a href="{{ url_for('public.contact') }}">İletişim Sayfamızı</a> ziyaret edebilir
+      veya <a href="mailto:flatnetsite@gmail.com">flatnetsite@gmail.com</a> adresine e-posta gönderebilirsiniz.
+    </p>
+
+    <hr>
+
+    <h5>Veri Güvenliği</h5>
+    <p>
+      Kullanıcılarımızın kişisel verilerinin güvenliği bizim için önceliklidir. Verilerinizin nasıl işlendiğini
+      ve korunduğunu öğrenmek için
+      <a href="{{ url_for('public.kvkk_text') }}">KVKK Aydınlatma Metni</a> ve
+      <a href="{{ url_for('public.privacy_policy') }}">Gizlilik Politikamızı</a> inceleyebilirsiniz.
+    </p>
+
+  </div>
+</div>
+{% endblock %}

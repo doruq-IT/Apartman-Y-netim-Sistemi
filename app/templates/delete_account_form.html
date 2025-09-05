@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_form_macros.html" import render_field %}
+
+{% block title %}Hesabı Sil{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-danger shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Hesabınızı Silmek Üzeresiniz</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="lead">Bu işlem geri alınamaz.</p>
+                    <p>Hesabınızı sildiğinizde, isminiz, e-posta adresiniz ve telefon numaranız gibi tüm kişisel bilgileriniz sistemden kalıcı olarak anonimleştirilecektir. Finansal kayıtlarınız (geçmiş aidat ödemeleri gibi) yasal yükümlülükler gereği anonim bir şekilde saklanmaya devam edecektir.</p>
+                    <p class="fw-bold">Devam etmek için lütfen mevcut şifrenizi girerek kimliğinizi doğrulayın.</p>
+                    
+                    <hr class="my-4">
+
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        {{ render_field(form.password) }}
+                        <div class="d-grid mt-3">
+                            {{ form.submit(class="btn btn-danger btn-lg") }}
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('resident.profile') }}" class="btn btn-secondary">Vazgeç</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex align-items-center mb-4">
+        <i class="bi bi-tools h1 text-primary me-3"></i>
+        <div>
+            <h2 class="mb-0">{{ title }}</h2>
+            <p class="text-muted mb-0">İhtiyacınız olan servisler için yöneticinizin önerdiği ustalara buradan ulaşabilirsiniz.</p>
+        </div>
+    </div>
+
+    {% if craftsmen %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        
+        {% for craftsman in craftsmen %}
+        <div class="col">
+            <div class="card h-100 shadow-sm craftsman-card">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-wrench-adjustable-circle-fill me-2"></i>
+                    {{ craftsman.specialty }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ craftsman.full_name }}</h5>
+                    
+                    <div id="craftsman-contact-{{ craftsman.id }}">
+                        <button class="btn btn-primary request-craftsman-btn" data-id="{{ craftsman.id }}">
+                            <i class="bi bi-telephone-outbound me-2"></i>Talep Oluştur ve Numarayı Gör
+                        </button>
+                    </div>
+                </div>
+                
+                {% if craftsman.notes %}
+                <div class="card-footer text-muted">
+                    <small><i class="bi bi-info-circle me-2"></i>{{ craftsman.notes }}</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+        <h4 class="alert-heading">Liste Henüz Boş</h4>
+        <p>Yöneticiniz tarafından bu listeye henüz anlaşmalı bir servis veya usta eklenmemiştir. Lütfen daha sonra tekrar kontrol edin.</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{# ===== GÜNCELLENMİŞ JAVASCRIPT KODU ===== #}
+{% block scripts %}
+{{ super() }} {# base.html'deki diğer scriptleri korur #}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.request-craftsman-btn');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const craftsmanId = this.dataset.id;
+            const contactDiv = document.getElementById('craftsman-contact-' + craftsmanId);
+            
+            // JWT token mantığı kaldırıldı. Tarayıcı session çerezini otomatik gönderecek.
+
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> İşleniyor...';
+
+            // İstek artık /api/v1/... yerine web sitemize özel olan /craftsmen/... adresine gidiyor
+            fetch(`/craftsmen/${craftsmanId}/request`, {
+                method: 'POST',
+                headers: {
+                    // Authorization başlığı kaldırıldı.
+                    'Content-Type': 'application/json',
+                    // Form olmadan POST isteği yaptığımız için CSRF korumasını bu başlıkla sağlıyoruz.
+                    'X-CSRF-Token': '{{ csrf_token() }}'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Başarılı olursa, butonu kaldırıp yerine telefon numarasını yaz
+                    contactDiv.innerHTML = `
+                        <p class="card-text">
+                            <i class="bi bi-telephone-fill me-2 text-success"></i>
+                            <a href="tel:${data.data.phone_number}" class="text-decoration-none fw-bold fs-5">${data.data.phone_number}</a>
+                        </p>
+                        <small class="text-success">${data.msg}</small>
+                    `;
+                } else {
+                    // API'den gelen hata mesajını göster
+                    throw new Error(data.errorMessage || 'Bilinmeyen bir hata oluştu.');
+                }
+            })
+            .catch(error => {
+                // Hata olursa, kullanıcıya bilgi ver ve butonu eski haline getir
+                contactDiv.innerHTML += `<p class="text-danger small mt-2">Hata: ${error.message}</p>`;
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Tekrar Dene';
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Manuel Kasa İşlemi{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-pencil-fill me-2"></i>Manuel Kasa İşlemi Ekle
+                    </h4>
+                     <p class="text-muted mb-0 small mt-1">Kasaya manuel olarak gelir veya gider kaydı yapın.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="manualTransactionForm" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {% if form.description.errors %}
+                                {{ form.description(class="form-control is-invalid", rows="3") }}
+                                <div class="invalid-feedback">{% for error in form.description.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.description(class="form-control", rows="3") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.amount.label(class="form-label") }}
+                                {% if form.amount.errors %}
+                                    {{ form.amount(class="form-control is-invalid", placeholder="Örn: 150.75") }}
+                                    <div class="invalid-feedback">{% for error in form.amount.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                                {% else %}
+                                    {{ form.amount(class="form-control", placeholder="Örn: 150.75") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.transaction_date.label(class="form-label") }}
+                                {% if form.transaction_date.errors %}
+                                    {{ form.transaction_date(class="form-control is-invalid", type="date") }}
+                                    <div class="invalid-feedback">{% for error in form.transaction_date.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                                {% else %}
+                                    {{ form.transaction_date(class="form-control", type="date") }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                             {{ form.transaction_type.label(class="form-label d-block") }}
+                             {% if form.transaction_type.errors %}
+                                <div class="is-invalid"></div>
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.transaction_type.errors %}<span>{{ error }}</span>{% endfor %}
+                                </div>
+                             {% endif %}
+                             
+                             {% for subfield in form.transaction_type %}
+                                <div class="form-check form-check-inline">
+                                    {{ subfield(class="form-check-input") }}
+                                    {{ subfield.label(class="form-check-label") }}
+                                </div>
+                             {% endfor %}
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('expense.kasa_view') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>İptal
+                    </a>
+                    <button type="submit" form="manualTransactionForm" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-2"></i>İşlemi Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

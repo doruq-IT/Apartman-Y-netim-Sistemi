@@ -1,0 +1,9 @@
+<!-- app/templates/email/welcome.html -->
+<!doctype html>
+<p>Merhaba {{ user.name or user.email }},</p>
+<p>Apartman Yönetim Sistemi’ne kayıt olduğunuz için teşekkürler.</p>
+<p>Hesabınızı aktifleştirmek için aşağıdaki linke tıklayın:</p>
+<p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+<p>Bu link 24 saat geçerlidir.</p>
+<p>E-posta doğrulandıktan sonra yönetici onayını beklemeniz gerekecektir.</p>
+

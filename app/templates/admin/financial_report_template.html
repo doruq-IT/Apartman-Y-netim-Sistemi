@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* Bu sayfaya özel stiller burada kalabilir veya ana CSS dosyanıza taşıyabilirsiniz. */
+    body { font-family: 'Helvetica', sans-serif; font-size: 10px; color: #333; }
+    .report-container { width: 100%; max-width: 960px; margin: auto; } /* Genişliği artırdık */
+    .report-h1, .report-h2 { text-align: center; color: #2c3e50; }
+    .report-h1 { font-size: 24px; margin-bottom: 10px; } /* Boyutları artırdık */
+    .report-h2 { font-size: 18px; font-weight: normal; margin-top: 0; margin-bottom: 30px; }
+    .report-h3 { font-size: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 40px;}
+    
+    .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; } /* Font boyutunu artırdık */
+    .report-table th, .report-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    .report-table th { background-color: #f8f9fa; font-weight: bold; }
+    
+    .text-end { text-align: right; }
+    .text-center { text-align: center; }
+    
+    .summary-table { margin-top: 40px; width: 60%; margin-left: auto; font-size: 15px; }
+    .summary-table td, .summary-table th { padding: 12px; }
+    .summary-table td:first-child { font-weight: bold; }
+
+    .income { color: #27ae60; font-weight: bold; }
+    .expense { color: #c0392b; font-weight: bold; }
+    
+    .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #7f8c8d; }
+
+    /* Sadece yazdırma sırasında görünecek stiller */
+    @media print {
+        body * {
+            visibility: hidden; /* Önce her şeyi gizle */
+        }
+        .printable-area, .printable-area * {
+            visibility: visible; /* Sadece yazdırılacak alanı ve içindekileri göster */
+        }
+        .printable-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        .btn {
+            display: none; /* Butonları gizle */
+        }
+    }
+</style>
+
+<div class="container mt-4 printable-area">
+    <div class="report-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="report-h1">{{ apartment_name }}</h1>
+                <h2 class="report-h2">Finansal Rapor ({{ start_date.strftime('%d.%m.%Y') }} - {{ end_date.strftime('%d.%m.%Y') }})</h2>
+            </div>
+            <button onclick="window.print();" class="btn btn-primary">Raporu Yazdır</button>
+        </div>
+
+        <h3 class="report-h3">İşlem Detayları</h3>
+        <table class="table table-bordered report-table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Tarih</th>
+                    <th>Açıklama</th>
+                    <th class="text-end">Gelir</th>
+                    <th class="text-end">Gider</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                <tr>
+                    <td>{{ t.transaction_date.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td>{{ t.description }}</td>
+                    <td class="text-end income">
+                        {% if t.amount > 0 %}
+                            {{ "%.2f"|format(t.amount) }} ₺
+                        {% endif %}
+                    </td>
+                    <td class="text-end expense">
+                        {% if t.amount < 0 %}
+                            {{ "%.2f"|format(t.amount|abs) }} ₺
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Bu tarih aralığında herhangi bir işlem bulunmamaktadır.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3 class="report-h3">Rapor Özeti</h3>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-pie-chart-fill me-2"></i>Gider Kalemi Dağılımı</h5>
+            </div>
+            <div class="card-body" style="position: relative; height:400px">
+                <canvas id="expensePieChart"></canvas>
+            </div>
+        </div>
+        <table class="table table-sm table-bordered summary-table">
+            <tr>
+                <td>Başlangıç Bakiyesi ({{ start_date.strftime('%d.%m.%Y') }} öncesi):</td>
+                <td class="text-end">{{ "%.2f"|format(starting_balance) }} ₺</td>
+            </tr>
+            <tr>
+                <td>Toplam Gelir:</td>
+                <td class="text-end income">+ {{ "%.2f"|format(total_income) }} ₺</td>
+            </tr>
+            <tr>
+                <td>Toplam Gider:</td>
+                <td class="text-end expense">- {{ "%.2f"|format(total_expense) }} ₺</td>
+            </tr>
+            <tr class="table-active">
+                <th>Dönem Sonu Bakiye ({{ end_date.strftime('%d.%m.%Y') }}):</th>
+                <th class="text-end">{{ "%.2f"|format(ending_balance) }} ₺</th>
+            </tr>
+        </table>
+
+        <div class="footer">
+            Bu rapor, {{ generation_date.strftime('%d.%m.%Y %H:%M:%S') }} tarihinde sistem tarafından otomatik olarak oluşturulmuştur.
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }} 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            const chartData = {{ chart_data | tojson }};
+
+            if (chartData && chartData.labels && chartData.labels.length > 0) {
+                const ctx = document.getElementById('expensePieChart');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: chartData.labels,
+                            datasets: [{
+                                label: 'Gider Tutarı (₺)',
+                                data: chartData.values,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Dönem İçi Giderlerin Dağılımı'
+                                }
+                            }
+                        }
+                    });
+                }
+            } else {
+                const chartArea = document.getElementById('expensePieChart');
+                if (chartArea) {
+                    const parentDiv = chartArea.parentElement;
+                    parentDiv.innerHTML = '<div class="text-center text-muted p-5">Bu dönemde gider kaydedilmediği için grafik oluşturulamadı.</div>';
+                }
+            }
+        })();
+    </script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">{{ title }}</h2>
+    <a href="{{ url_for('superadmin.add_common_area') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-2"></i>Yeni Alan Ekle
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if areas %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Alan Adı</th>
+                        <th scope="col">Apartman Adı</th>
+                        <th scope="col">Açıklama</th>
+                        <th scope="col" class="text-center">Durum</th>
+                        <th scope="col" class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for area in areas %}
+                    <tr>
+                        <td>{{ area.name }}</td>
+                        <td>
+                            <a href="{{ url_for('superadmin.apartment_details', apartment_id=area.apartment.id) }}" class="text-decoration-none">
+                                {{ area.apartment.name }}
+                            </a>
+                        </td>
+                        <td>{{ area.description or '-' }}</td>
+                        <td class="text-center">
+                            {% if area.is_active %}
+                                <span class="badge bg-success">Aktif</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Pasif</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ url_for('superadmin.edit_common_area', area_id=area.id) }}" class="btn btn-sm btn-outline-secondary me-1">Düzenle</a>
+
+                            <form method="POST" action="{{ url_for('superadmin.delete_common_area', area_id=area.id) }}" class="d-inline">
+                                {{ form.hidden_tag() }}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                        onclick="return confirm('Bu alanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.');">
+                                    Sil
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            Sistemde hiç ortak alan bulunmuyor. Başlamak için "Yeni Alan Ekle" butonuna tıklayın.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Şifre Sıfırla{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-key-fill me-2"></i>Şifre Sıfırlama
+                    </h4>
+                    <p class="text-muted mb-0 small">Kayıtlı e-posta adresinizi girerek sıfırlama linki talep edin.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('auth.reset_request') }}" novalidate>
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <div class="mb-3">
+                                {{ form.email.label(class="form-label fw-bold") }}
+                                {% if form.email.errors %}
+                                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.email.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.email(class="form-control form-control-lg", placeholder="e-posta@adresiniz.com") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <small><a href="{{ url_for('auth.login') }}">Giriş ekranına geri dön</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

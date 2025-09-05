@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hesabınız Onaylandı!</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        .footer { margin-top: 25px; font-size: 0.85em; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Hesabınız Onaylandı ve Aktif Edildi!</h3>
+        <p>Merhaba {{ user.name }},</p>
+        <p>
+            Apartman Yönetim Sistemi'ne yaptığınız üyelik başvurusu yönetici tarafından incelenmiş ve onaylanmıştır.
+        </p>
+        <p>
+            Artık aşağıdaki butona tıklayarak sisteme giriş yapabilir ve tüm özellikleri kullanmaya başlayabilirsiniz.
+        </p>
+
+        <a href="{{ url_for('resident.dashboard', _external=True) }}" class="button">
+            Sisteme Giriş Yap
+        </a>
+
+        <p class="footer">
+            Bu e-posta, Apartman Yönetim Sistemi tarafından otomatik olarak gönderilmiştir.
+        </p>
+    </div>
+</body>
+</html>

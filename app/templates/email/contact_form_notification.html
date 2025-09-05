@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni İletişim Formu Gönderimi</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { color: #4a5568; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .content { margin-top: 20px; }
+        .footer { margin-top: 30px; font-size: 12px; color: #718096; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Yeni İletişim Formu Mesajı</h2>
+        </div>
+        
+        <div class="content">
+            <p><strong>Gönderen:</strong> {{ name }} ({{ email }})</p>
+            <p><strong>Konu:</strong> {{ subject_body }}</p>
+            <p><strong>Mesaj:</strong></p>
+            
+            <div style="background: #f7fafc; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                {{ message_body }}
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Bu e-posta Apartman Yönetim Sistemi iletişim formu aracılığıyla gönderilmiştir.</p>
+        </div>
+    </div>
+</body>
+</html>

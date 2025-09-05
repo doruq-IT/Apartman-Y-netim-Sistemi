@@ -1,0 +1,25 @@
+# Hassas Bilgiler ve Kimlik Bilgileri
+.env
+credentials.json
+firebase_credentials.json
+
+# Google Cloud'a Özel Dağıtım Dosyaları
+app.yaml
+cron.yaml
+.gcloudignore
+cloud-sql-proxy.exe
+
+# Veritabanı Migration Klasörü
+migrations/
+
+# Python Önbellek ve Derlenmiş Dosyalar
+# (Bunlar app klasörü içinde de oluşabileceği için kalması önemlidir)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE ve İşletim Sistemi Dosyaları
+.vscode/
+.idea/
+.DS_Store

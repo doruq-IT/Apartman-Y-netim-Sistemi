@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Aidat Ekle{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-plus-circle-dotted me-2"></i>Yeni Aidat Tanımla
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="addDuesForm" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.user_id.label(class="form-label") }}
+                            {% if form.user_id.errors %}
+                                {{ form.user_id(class="form-select is-invalid") }}
+                                <div class="invalid-feedback">{% for error in form.user_id.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.user_id(class="form-select") }}
+                            {% endif %}
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            {{ form.assign_to_all(class="form-check-input", role="switch") }}
+                            {{ form.assign_to_all.label(class="form-check-label fw-bold") }}
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {% if form.description.errors %}
+                                {{ form.description(class="form-control is-invalid", placeholder="Örn: Temmuz 2025 Aidatı") }}
+                                <div class="invalid-feedback">{% for error in form.description.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.description(class="form-control", placeholder="Örn: Temmuz 2025 Aidatı") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.amount.label(class="form-label") }}
+                                {% if form.amount.errors %}
+                                    {{ form.amount(class="form-control is-invalid", placeholder="500.00") }}
+                                    <div class="invalid-feedback">{% for error in form.amount.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                                {% else %}
+                                    {{ form.amount(class="form-control", placeholder="500.00") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.due_date.label(class="form-label") }}
+                                {% if form.due_date.errors %}
+                                    {{ form.due_date(class="form-control is-invalid", type="date") }}
+                                    <div class="invalid-feedback">{% for error in form.due_date.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                                {% else %}
+                                    {{ form.due_date(class="form-control", type="date") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('admin.all_dues') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>İptal
+                    </a>
+                    <button type="submit" form="addDuesForm" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-2"></i>Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const assignToAllCheckbox = document.getElementById('assign_to_all');
+        const userSelectDropdown = document.getElementById('user_id');
+
+        function toggleUserSelect() {
+            if (assignToAllCheckbox.checked) {
+                userSelectDropdown.disabled = true;
+                userSelectDropdown.value = '';
+            } else {
+                userSelectDropdown.disabled = false;
+            }
+        }
+        
+        assignToAllCheckbox.addEventListener('change', toggleUserSelect);
+        toggleUserSelect();
+    });
+</script>
+{% endblock %}

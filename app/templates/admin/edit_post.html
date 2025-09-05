@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_form_macros.html" import render_field %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>{{ title }}</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="postForm" novalidate enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        {{ render_field(form.title) }}
+                        {{ render_field(form.slug, attrs={'aria-describedby': 'slugHelp'}) }}
+                        <div id="slugHelp" class="form-text mb-3">Bu, yazının tarayıcı adres çubuğunda görünecek olan SEO dostu ismidir. Sadece küçük harf, rakam ve tire (-) kullanın.</div>
+
+                        {% if post.image_url %}
+                        <div class="mb-3">
+                            <label class="form-label">Mevcut Kapak Resmi</label><br>
+                            <img src="{{ post.image_url }}" alt="Mevcut Kapak Resmi" class="img-fluid rounded" style="max-height: 200px;">
+                            <small class="form-text text-muted d-block mt-2">Yeni bir resim yüklerseniz bu resim değiştirilecektir.</small>
+                        </div>
+                        {% endif %}
+                        {{ render_field(form.image) }}
+
+                        {{ render_field(form.content) }}
+
+                        <div class="form-check form-switch mb-3">
+                            {{ form.is_published(class="form-check-input") }}
+                            {{ form.is_published.label(class="form-check-label") }}
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('admin.list_posts') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i> İptal
+                    </a>
+                    <button type="submit" form="postForm" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-1"></i> {{ form.submit.label.text }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

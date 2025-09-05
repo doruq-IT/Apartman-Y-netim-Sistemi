@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "_form_macros.html" import render_field %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ title }}</h4>
+            </div>
+            <div class="card-body p-4">
+                <h5 class="card-title">{{ area.name }}</h5>
+                <p class="lead">Aşağıdaki zaman aralığı için rezervasyon yapmak üzeresiniz:</p>
+                
+                {# Bitiş saatini JavaScript ile güncelleyebilmek için strong etiketine bir ID ekliyoruz #}
+                <ul>
+                    <li><strong>Başlangıç:</strong> {{ start_time.replace('T', ' ')|truncate(16, True, '') }}</li>
+                    <li><strong>Bitiş:</strong> <strong id="end-time-display">{{ end_time.replace('T', ' ')|truncate(16, True, '') }}</strong></li>
+                </ul>
+                <hr>
+
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+
+                    {# Başlangıç saatini gizli olarak göndermeye devam ediyoruz #}
+                    <input type="hidden" name="start_time" value="{{ start_time }}">
+                    
+                    {# Bitiş saatini artık gizli olarak göndermiyoruz, bu satırı sildik #}
+                    
+                    {{ render_field(form.num_of_people) }}
+
+                    {# Yeni Süre alanını buraya ekliyoruz #}
+                    {{ render_field(form.duration) }}
+
+                    {{ render_field(form.notes, attrs={'rows': 3}) }}
+
+                    <div class="d-grid mt-4">
+                        {{ form.submit(class="btn btn-success btn-lg") }}
+                        <a href="{{ url_for('resident.reservation_calendar', area_id=area.id) }}" class="btn btn-secondary mt-2">İptal Et ve Takvime Dön</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{# Sayfanın en sonuna, bitiş saatini dinamik güncelleyen JavaScript kodunu ekliyoruz #}
+{% block scripts %}
+{{ super() }} {# base.html'deki script'leri miras alır #}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Değişkenleri tanımla
+        const startTimeStr = "{{ start_time }}";
+        const durationSelect = document.getElementById('duration');
+        const endTimeDisplay = document.getElementById('end-time-display');
+
+        // Bitiş saatini güncelleyen fonksiyon
+        function updateEndTime() {
+            // 1. Başlangıç saatini bir Date nesnesine çevir
+            const startDate = new Date(startTimeStr);
+            
+            // 2. Açılır menüden seçilen süreyi (saat olarak) al
+            const durationHours = parseInt(durationSelect.value, 10);
+
+            // 3. Bitiş saatini hesapla (başlangıca seçilen süreyi ekleyerek)
+            const endDate = new Date(startDate.getTime() + (durationHours * 60 * 60 * 1000));
+
+            // 4. Bitiş saatini "YYYY-MM-DD HH:MM" formatında ekrana yazdır
+            const year = endDate.getFullYear();
+            const month = String(endDate.getMonth() + 1).padStart(2, '0');
+            const day = String(endDate.getDate()).padStart(2, '0');
+            const hours = String(endDate.getHours()).padStart(2, '0');
+            const minutes = String(endDate.getMinutes()).padStart(2, '0');
+
+            endTimeDisplay.textContent = `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+
+        // Kullanıcı "Süre" menüsünü her değiştirdiğinde updateEndTime fonksiyonunu çalıştır
+        durationSelect.addEventListener('change', updateEndTime);
+
+        // Sayfa ilk yüklendiğinde de bitiş saatinin doğru hesaplandığından emin ol
+        updateEndTime();
+    });
+</script>
+{% endblock %}

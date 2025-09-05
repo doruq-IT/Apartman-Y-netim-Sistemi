@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Kasa Durumu{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center card-header-responsive">
+                        <h4 class="mb-0">
+                            <i class="bi bi-safe-fill me-2"></i>Kasa Durumu ve İşlem Defteri
+                        </h4>
+                        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                        <a href="{{ url_for('admin.add_manual_transaction') }}" class="btn btn-success">
+                            <i class="bi bi-plus-circle-fill me-2"></i>Manuel İşlem Ekle
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <hr class="my-3">
+                    
+                    <div class="text-center">
+                        <p class="text-muted mb-2 small">Apartmanın güncel finansal durumu ve tüm işlemlerin dökümü.</p>
+                        <h5 class="mb-1">Güncel Bakiye</h5>
+                        <h2 class="display-5 fw-bold {% if balance >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            ₺{{ "%.2f"|format(balance) }}
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if transactions %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Tarih</th>
+                                        <th scope="col">Açıklama</th>
+                                        <th scope="col" class="text-end">Gelir (₺)</th>
+                                        <th scope="col" class="text-end">Gider (₺)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tx in transactions %}
+                                    <tr>
+                                        <td>{{ tx.transaction_date.strftime('%d.%m.%Y') }}</td>
+                                        <td>{{ tx.description }}</td>
+                                        
+                                        {% if tx.amount > 0 %}
+                                            <td class="text-end text-success fw-bold">+{{ "%.2f"|format(tx.amount) }}</td>
+                                            <td class="text-end"></td>
+                                        {% else %}
+                                            <td class="text-end"></td>
+                                            <td class="text-end text-danger fw-bold">{{ "%.2f"|format(tx.amount) }}</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info text-center">
+                            <h4 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Henüz İşlem Kaydı Yok</h4>
+                            <p class="mb-0">Sistemde kayıtlı herhangi bir gelir veya gider işlemi bulunmamaktadır.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

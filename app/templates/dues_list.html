@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center card-header-responsive">
+                <h4 class="mb-0">
+                    <i class="bi bi-cash-stack me-2"></i>Aidat ve Ödeme Geçmişi
+                </h4>
+                <div class="text-end">
+                    <span class="text-muted">Toplam Borcunuz:</span>
+                    <h5 class="text-danger mb-0 fw-bold">₺{{ "%.2f"|format(total_debt) }}</h5>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="card-body">
+            {% if dues %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Dönem</th>
+                                <th scope="col">Son Ödeme Tarihi</th>
+                                <th scope="col" class="text-end">Tutar</th>
+                                <th scope="col" class="text-center">Ödeme Durumu</th>
+                                <th scope="col" class="text-center">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in dues %}
+                            <tr>
+                                <td><strong>{{ d.due_date.strftime('%B %Y') }}</strong></td>
+                                <td>{{ d.due_date.strftime('%d.%m.%Y') }}</td>
+                                <td class="text-end fw-bold">₺{{ "%.2f"|format(d.amount) }}</td>
+                                <td class="text-center">
+                                    {% if d.is_paid %}
+                                        <span class="badge bg-success">Ödendi</span>
+                                    {% elif today and d.due_date < today %}
+                                        <span class="badge bg-danger">Gecikmede</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Ödenmedi</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if not d.is_paid %}
+                                        <a href="{{ url_for('resident.upload_receipt', dues_id=d.id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-upload me-1"></i>Makbuz Yükle
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-sm btn-outline-success" disabled>
+                                            <i class="bi bi-check-circle me-1"></i>Ödendi
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if pagination and pagination.pages > 1 %}
+                <nav aria-label="Aidat geçmişi sayfaları" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('resident.dues_list', page=pagination.prev_num) }}">Önceki</a>
+                        </li>
+
+                        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                            {% if page_num %}
+                                {% if pagination.page == page_num %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('resident.dues_list', page=page_num) }}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('resident.dues_list', page=pagination.next_num) }}">Sonraki</a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-success text-center">
+                    <h4 class="alert-heading"><i class="bi bi-patch-check-fill"></i> Tebrikler!</h4>
+                    <p class="mb-0">Geçmişe dönük veya güncel bir aidat borcunuz bulunmamaktadır.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

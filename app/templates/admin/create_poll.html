@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title or "Yeni Anket Oluştur" }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-patch-question-fill me-2"></i>Yeni Anket Oluştur
+                    </h4>
+                </div>
+                
+                <form method="POST" action="{{ url_for('admin.create_poll') }}" id="poll-form" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="card-body p-4">
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                {% for field, error_list in form.errors.items() %}
+                                    {% for error in error_list %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-4">
+                            {{ form.question.label(class="form-label fs-5 fw-bold") }}
+                            {{ form.question(class="form-control form-control-lg" + (" is-invalid" if form.question.errors else "")) }}
+                            {% if form.question.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.question.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <h5 class="fw-bold">Anket Seçenekleri</h5>
+                            <small class="text-muted">En az 2, en fazla 10 seçenek ekleyebilirsiniz.</small>
+                            
+                            <div id="options-container" class="mt-3">
+                                {% for option_form in form.options %}
+                                <div class="input-group mb-2 option-entry">
+                                    {{ option_form.text(class="form-control" + (" is-invalid" if option_form.text.errors else ""), placeholder="Seçenek " + (loop.index|string)) }}
+                                    <button type="button" class="btn btn-outline-danger remove-option-btn" title="Seçeneği Sil">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="button" id="add-option-btn" class="btn btn-outline-success mt-2">
+                                <i class="bi bi-plus-circle-fill me-1"></i>Yeni Seçenek Ekle
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-end bg-light">
+                        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">İptal</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addOptionBtn = document.getElementById('add-option-btn');
+    const optionsContainer = document.getElementById('options-container');
+    const maxOptions = {{ form.options.max_entries }};
+
+    addOptionBtn.addEventListener('click', function() {
+        const currentOptionsCount = optionsContainer.querySelectorAll('.option-entry').length;
+        
+        if (currentOptionsCount >= maxOptions) {
+            alert('Maksimum seçenek sayısına ulaştınız (' + maxOptions + ').');
+            return;
+        }
+
+        const newIndex = currentOptionsCount;
+        const newOptionHTML = `
+            <div class="input-group mb-2 option-entry">
+                <input class="form-control" id="options-${newIndex}-text" name="options-${newIndex}-text" placeholder="Seçenek ${newIndex + 1}" type="text" value="">
+                <button type="button" class="btn btn-outline-danger remove-option-btn" title="Seçeneği Sil">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </div>
+        `;
+        
+        optionsContainer.insertAdjacentHTML('beforeend', newOptionHTML);
+    });
+
+    optionsContainer.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-option-btn');
+        if (removeBtn) {
+            const currentOptionsCount = optionsContainer.querySelectorAll('.option-entry').length;
+            
+            if (currentOptionsCount <= 2) {
+                alert('En az 2 anket seçeneği olmalıdır.');
+                return;
+            }
+            
+            removeBtn.closest('.option-entry').remove();
+        }
+    });
+});
+</script>
+{% endblock %}

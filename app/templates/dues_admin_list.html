@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Tüm Aidatlar - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-journal-text me-2"></i>Tüm Aidat Kayıtları
+                </h4>
+                <a href="{{ url_for('admin.add_dues') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Yeni Aidat Ekle
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if dues %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Sakin</th>
+                                <th scope="col">Dönem / Açıklama</th>
+                                <th scope="col" class="text-end">Tutar</th>
+                                <th scope="col">Son Ödeme Tarihi</th>
+                                <th scope="col" class="text-center">Durum</th>
+                                <th scope="col" class="text-center">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in dues %}
+                            <tr>
+                                <td>{{ d.user.name }}</td>
+                                <td>{{ d.description }}</td>
+                                <td class="text-end fw-bold">₺{{ "%.2f"|format(d.amount) }}</td>
+                                <td>{{ d.due_date.strftime('%d.%m.%Y') }}</td>
+                                <td class="text-center">
+                                    {% if d.is_paid %}
+                                        <span class="badge bg-success">Ödendi</span>
+                                    {% elif today and d.due_date.date() < today %}
+                                        <span class="badge bg-danger">Gecikmede</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Ödenmedi</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <form action="{{ url_for('admin.toggle_dues_status', dues_id=d.id) }}" method="POST" class="d-inline">
+                                        {{ form.csrf_token if form }} 
+                                        {% if d.is_paid %}
+                                            <button type="submit" class="btn btn-sm btn-secondary" title="Ödemeyi 'Ödenmedi' olarak değiştir">
+                                                <i class="bi bi-x-lg"></i> İptal Et
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-sm btn-success" title="Ödemeyi 'Ödendi' olarak onayla">
+                                                <i class="bi bi-check-lg"></i> Onayla
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Henüz Kayıt Yok!</h4>
+                    <p>Sistemde herhangi bir kullanıcı için oluşturulmuş aidat kaydı bulunmamaktadır.</p>
+                    <hr>
+                    <a href="{{ url_for('admin.add_dues') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle-fill me-2"></i>İlk Aidat Kaydını Oluştur
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

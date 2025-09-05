@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Profil Bilgilerini Düzenle
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="profileEditForm" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <h5>Kişisel Bilgiler</h5>
+                        <hr class="mt-2">
+
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {% if form.name.errors %}
+                                {{ form.name(class="form-control is-invalid", disabled=true) }} {# <--- DEĞİŞİKLİK BURADA #}
+                                <div class="invalid-feedback">{% for error in form.name.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.name(class="form-control", disabled=true) }} {# <--- DEĞİŞİKLİK BURADA #}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {% if form.email.errors %}
+                                {{ form.email(class="form-control is-invalid", disabled=true) }} {# <--- DEĞİŞİKLİK BURADA #}
+                                <div class="invalid-feedback">{% for error in form.email.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.email(class="form-control", disabled=true) }} {# <--- DEĞİŞİKLİK BURADA #}
+                            {% endif %}
+                        </div>
+
+                        <h5 class="mt-5">Şifre Değiştir</h5>
+                        <hr class="mt-2">
+                        <small class="form-text text-muted d-block mb-3">
+                            Şifrenizi değiştirmek istemiyorsanız bu alanları boş bırakabilirsiniz.
+                        </small>
+
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {% if form.password.errors %}
+                                {{ form.password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">{% for error in form.password.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.password(class="form-control") }}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.confirm_password.label(class="form-label") }}
+                            {% if form.confirm_password.errors %}
+                                {{ form.confirm_password(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">{% for error in form.confirm_password.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.confirm_password(class="form-control") }}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('resident.profile') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>İptal
+                    </a>
+                    <button type="submit" form="profileEditForm" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-2"></i>Değişiklikleri Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

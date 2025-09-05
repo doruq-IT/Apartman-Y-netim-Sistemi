@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title or "Anketler" }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-patch-question-fill me-2"></i>{{ title or "Aktif Anketler" }}
+        </h2>
+        {# DEĞİŞİKLİK: Artık toplam anket sayısını pagination nesnesinden alıyoruz #}
+        {% if pagination %}
+        <span class="badge bg-primary rounded-pill fs-6">{{ pagination.total }} Anket</span>
+        {% endif %}
+    </div>
+
+    {% if not polls %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center p-5">
+                <i class="bi bi-journal-x fs-1 text-muted"></i>
+                <h4 class="mt-3">Aktif Anket Bulunmuyor</h4>
+                <p class="text-muted">Şu anda katılabileceğiniz herhangi bir anket mevcut değil.</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            {% for poll in polls %}
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 shadow-sm poll-card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ poll.question }}</h5>
+                        <p class="card-text text-muted small">
+                            Oluşturulma Tarihi: {{ poll.created_at.strftime('%d %B %Y') }}
+                        </p>
+                        
+                        {# Kartın en altına butonları yaslamak için mt-auto kullanılır #}
+                        <div class="mt-auto pt-3">
+                            <a href="{{ url_for('poll.view_poll', poll_id=poll.id) }}" class="btn btn-primary">
+                                <i class="bi bi-check2-square me-1"></i>Oylamaya Katıl
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if pagination and pagination.pages > 1 %}
+        <nav aria-label="Anket sayfaları" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('poll.list_polls', page=pagination.prev_num) }}">Önceki</a>
+                </li>
+
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if pagination.page == page_num %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('poll.list_polls', page=page_num) }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('poll.list_polls', page=pagination.next_num) }}">Sonraki</a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+        {% endif %}
+</div>
+{% endblock %}

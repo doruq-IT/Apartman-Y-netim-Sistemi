@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 text-truncate">
+                    <i class="bi bi-chat-square-dots-fill me-2"></i>Talep Detayı: {{ request.title }}
+                </h4>
+                <a href="{{ url_for('admin.all_requests') }}" class="btn btn-sm btn-outline-secondary flex-shrink-0 ms-3">
+                    <i class="bi bi-arrow-left-circle me-1"></i>Listeye Geri Dön
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-7 border-end pe-lg-4">
+                    <h5 class="mb-3"><i class="bi bi-person-fill text-primary"></i> Sakin Talebi</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Gönderen:</dt>
+                        <dd class="col-sm-8">{{ request.user.name }}</dd>
+
+                        <dt class="col-sm-4">Tarih:</dt>
+                        <dd class="col-sm-8 utc-date">{{ request.created_at.isoformat() }}</dd>
+
+                        <dt class="col-sm-4">Mevcut Durum:</dt>
+                        <dd class="col-sm-8">
+                            {% if request.status.value == 'Beklemede' or request.status == 'Beklemede' %}
+                                <span class="badge bg-warning text-dark">Beklemede</span>
+                            {% elif request.status.value == 'İşlemde' or request.status == 'İşlemde' %}
+                                <span class="badge bg-info text-dark">İşlemde</span>
+                            {% elif request.status.value == 'Tamamlandı' or request.status == 'Tamamlandı' %}
+                                <span class="badge bg-success">Tamamlandı</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ request.status }}</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Kategori:</dt>
+                        <dd class="col-sm-8">{{ request.category or '—' }}</dd>
+
+                        <dt class="col-sm-4">Öncelik:</dt>
+                        <dd class="col-sm-8">{{ request.priority or '—' }}</dd>
+
+                        <dt class="col-sm-4">Konum:</dt>
+                        <dd class="col-sm-8">{{ request.location or '—' }}</dd>
+
+                        <dt class="col-sm-4">Ek:</dt>
+                        <dd class="col-sm-8">
+                            {% if request.attachment_url %}
+                                <a href="{{ url_for('admin.download_request_attachment', request_id=request.id) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-paperclip me-1"></i>Belgeyi Aç
+                                </a>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </dd>
+                    </dl>
+
+                    <hr>
+                    <h6>Açıklama:</h6>
+                    <div class="alert alert-light p-3">{{ request.description }}</div>
+                    
+                    {% if request.reply %}
+                    <hr>
+                    <h6>Mevcut Yanıtınız:</h6>
+                    <div class="alert alert-secondary p-3">{{ request.reply }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-5 ps-lg-4">
+                    <h5 class="mb-3"><i class="bi bi-tools text-success"></i> Yönetici Paneli</h5>
+                    
+                    <form method="POST" action="{{ url_for('admin.reply_request', request_id=request.id) }}" class="mb-4" novalidate>
+                        {{ reply_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ reply_form.reply.label(class="form-label", for="replyText") }}
+                            {{ reply_form.reply(class="form-control", rows="6", id="replyText") }}
+                        </div>
+                        <button type="submit" name="submit_reply" class="btn btn-success w-100">
+                            <i class="bi bi-send-fill me-2"></i>Yanıtı Kaydet
+                        </button>
+                    </form>
+
+                    <hr>
+
+                    <form method="POST" action="{{ url_for('admin.update_request_status', request_id=request.id) }}" novalidate>
+                        {{ status_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ status_form.status.label(class="form-label", for="statusSelect") }}
+                            {{ status_form.status(class="form-select", id="statusSelect") }}
+                        </div>
+                        <button type="submit" name="submit_status" class="btn btn-info w-100">
+                            <i class="bi bi-check-circle-fill me-2"></i>Durumu Güncelle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

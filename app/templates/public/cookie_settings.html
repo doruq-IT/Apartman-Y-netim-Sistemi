@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}Çerez Tercihleri Yönetimi{% endblock %}
+
+{% block content %}
+<div class="container mx-auto my-12 px-4">
+  <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow-lg border border-gray-200">
+
+    <!-- Başlık -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Çerez Tercihleri Yönetimi</h1>
+      <p class="text-gray-600 mt-2">
+        Web sitemizde deneyiminizi geliştirmek için kullandığımız teknolojiler hakkında bilgi alabilir ve tercihlerinizi yönetebilirsiniz.
+      </p>
+    </div>
+
+    <!-- Açıklama -->
+    <div class="prose max-w-none text-gray-700 mb-8">
+      <h2 class="text-2xl font-bold text-gray-900">Çerez Nedir ve Neden Kullanıyoruz?</h2>
+      <p>
+        Çerezler, ziyaret ettiğiniz web siteleri tarafından tarayıcınıza kaydedilen küçük metin dosyalarıdır.
+        Sitemizi ziyaret ettiğinizde kullanıcı deneyiminizi iyileştirmek, güvenliği sağlamak ve sitemizin
+        performansını analiz etmek gibi amaçlarla çerezler kullanmaktayız.
+      </p>
+      <p>
+        Kullandığımız çerezler hakkında detaylı bilgiyi
+        <!-- GÜNCELLENEN SATIR BURASI -->
+        <a href="{{ url_for('public.privacy_policy') }}" class="text-indigo-600 underline">Gizlilik Politikası</a>
+        sayfamızda bulabilirsiniz. Burada yaptığınız tercihler yalnızca bu tarayıcı ve cihaz için geçerlidir.
+      </p>
+    </div>
+
+    <!-- Kartlar (Değişiklik yok) -->
+    <div class="space-y-6">
+
+      <!-- Zorunlu -->
+      <section class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-start justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-gray-200">🔒</span>
+              <h3 class="text-lg font-bold text-gray-900">Zorunlu Oturum Çerezleri</h3>
+            </div>
+            <p class="mt-2 text-sm text-gray-600">
+              Bu çerezler, web sitesinin temel fonksiyonlarının (kullanıcı girişi, güvenlik vb.) çalışması için gereklidir.
+              Sitemiz bu çerezler olmadan düzgün çalışamaz ve bu nedenle devre dışı bırakılamazlar.
+            </p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded-full">Her Zaman Aktif</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analitik -->
+      <section class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-start justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-indigo-100">📊</span>
+              <h3 class="text-lg font-bold text-gray-900">Performans ve Analitik Çerezleri</h3>
+            </div>
+            <p class="mt-2 text-sm text-gray-600">
+              Bu çerezler, sitemizi kaç kişinin ziyaret ettiğini ve hangi sayfalarda ne kadar zaman geçirildiğini anonim olarak ölçmemize yardımcı olur.
+              Hizmeti iyileştirmemize destek olur. Kabul edip etmemek tamamen sizin tercihinizdir.
+            </p>
+          </div>
+
+          <!-- Toggle -->
+          <label class="inline-flex items-center select-none cursor-pointer" aria-label="Analitik çerezleri etkinleştir">
+            <input id="analitik-cerezler" type="checkbox" class="sr-only peer">
+            <span class="w-11 h-6 bg-gray-300 rounded-full relative transition-colors peer-checked:bg-indigo-600">
+              <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Pazarlama -->
+      <section class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-start justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-pink-100">🎯</span>
+              <h3 class="text-lg font-bold text-gray-900">Pazarlama ve Reklam Çerezleri</h3>
+            </div>
+            <p class="mt-2 text-sm text-gray-600">
+              İlgi alanlarınıza yönelik daha alakalı reklamlar göstermek için kullanılır. <strong>Şu anda bu tür çerezleri aktif olarak kullanmıyoruz</strong>,
+              ancak gelecekte kullanma ihtimalimize karşı burada tercih hakkı sunuyoruz.
+            </p>
+          </div>
+
+          <!-- Toggle -->
+          <label class="inline-flex items-center select-none cursor-pointer" aria-label="Pazarlama çerezlerini etkinleştir">
+            <input id="pazarlama-cerezler" type="checkbox" class="sr-only peer">
+            <span class="w-11 h-6 bg-gray-300 rounded-full relative transition-colors peer-checked:bg-indigo-600">
+              <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
+            </span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <!-- Aksiyonlar (Değişiklik yok) -->
+    <div class="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div id="save-success-message" class="hidden text-sm font-medium text-green-700 bg-green-50 px-3 py-2 rounded-lg">
+        Tercihleriniz kaydedildi.
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="accept-all-btn" class="w-full sm:w-auto bg-gray-200 text-gray-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-300 transition">
+          Tümünü Kabul Et
+        </button>
+        <button id="reject-all-btn" class="w-full sm:w-auto bg-gray-100 text-gray-700 font-semibold py-2 px-6 rounded-lg hover:bg-gray-200 transition">
+          Tümünü Reddet
+        </button>
+        <button id="save-prefs-btn" class="w-full sm:w-auto bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
+          Tercihlerimi Kaydet
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- Script bölümünde değişiklik yok -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Toggle referansları
+  const toggles = {
+    analytics: document.getElementById('analitik-cerezler'),
+    marketing: document.getElementById('pazarlama-cerezler')
+  };
+
+  const saveBtn   = document.getElementById('save-prefs-btn');
+  const acceptAll = document.getElementById('accept-all-btn');
+  const rejectAll = document.getElementById('reject-all-btn');
+  const successEl = document.getElementById('save-success-message');
+
+  // localStorage anahtarları
+  const KEY_MAIN  = 'cookieConsent';                 // 'accepted' | 'declined' | (yok)
+  const KEY_PREFS = 'cookieConsentPreferences';      // JSON: { analytics: bool, marketing: bool }
+
+  // Kaydedilmiş tercihleri yükle
+  function loadPreferences() {
+    try {
+      const prefs = JSON.parse(localStorage.getItem(KEY_PREFS)) || {};
+      if (toggles.analytics) toggles.analytics.checked = !!prefs.analytics;
+      if (toggles.marketing) toggles.marketing.checked = !!prefs.marketing;
+    } catch (e) { /* yoksay */ }
+  }
+
+  // Tercihleri kaydet
+  function savePreferences() {
+    const newPrefs = {
+      analytics: toggles.analytics ? !!toggles.analytics.checked : false,
+      marketing: toggles.marketing ? !!toggles.marketing.checked : false
+    };
+    // Ana rızayı kullanıcının seçim yaptığı anlamında accepted olarak işaretliyoruz
+    localStorage.setItem(KEY_MAIN, 'accepted');
+    localStorage.setItem(KEY_PREFS, JSON.stringify(newPrefs));
+
+    // Bildirim
+    successEl.classList.remove('hidden');
+    setTimeout(() => successEl.classList.add('hidden'), 3000);
+  }
+
+  // Hepsini kabul
+  function acceptAllPreferences() {
+    if (toggles.analytics) toggles.analytics.checked = true;
+    if (toggles.marketing) toggles.marketing.checked = true;
+    savePreferences();
+  }
+
+  // Hepsini reddet
+  function rejectAllPreferences() {
+    if (toggles.analytics) toggles.analytics.checked = false;
+    if (toggles.marketing) toggles.marketing.checked = false;
+    // Ana rızayı declined olarak güncelle
+    localStorage.setItem(KEY_MAIN, 'declined');
+    localStorage.setItem(KEY_PREFS, JSON.stringify({ analytics: false, marketing: false }));
+    successEl.textContent = 'Tüm çerez kategorileri reddedildi.';
+    successEl.classList.remove('hidden');
+    setTimeout(() => {
+      successEl.textContent = 'Tercihleriniz kaydedildi.';
+      successEl.classList.add('hidden');
+    }, 3000);
+  }
+
+  // Eventler
+  if (saveBtn)   saveBtn.addEventListener('click', savePreferences);
+  if (acceptAll) acceptAll.addEventListener('click', acceptAllPreferences);
+  if (rejectAll) rejectAll.addEventListener('click', rejectAllPreferences);
+
+  // Klavye erişilebilirliği: Enter/Space ile Kaydet
+  document.addEventListener('keydown', function(e){
+    if ((e.key === 'Enter' || e.key === ' ') && (document.activeElement === saveBtn)) {
+      e.preventDefault();
+      savePreferences();
+    }
+  });
+
+  // İlk yükleme
+  loadPreferences();
+});
+</script>
+{% endblock %}

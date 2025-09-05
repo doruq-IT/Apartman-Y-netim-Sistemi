@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block title %}Yeni Hesap Oluştur{% endblock %}
+
+{% block content %}
+
+<div id="all-blocks-data" style="display: none;">
+    {% if blocks %}
+        {% for block in blocks %}
+            <option value="{{ block.id }}" data-apartment-id="{{ block.apartment_id }}">{{ block.name }}</option>
+        {% endfor %}
+    {% endif %}
+</div>
+
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9 col-sm-12">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header text-center bg-primary text-white py-3">
+          <h4 class="mb-0">
+            <i class="bi bi-person-plus-fill me-2"></i>Yeni Hesap Oluşturun
+          </h4>
+          <p class="text-white-75 mb-0 small">Apartman Yönetim Sistemi'ne katılmak için bilgileri doldurun.</p>
+        </div>
+        <div class="card-body p-4 p-md-5">
+
+          <form method="POST" action="{{ url_for('auth.signup') }}" id="signupForm" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                {{ form.first_name.label(class="form-label fw-bold") }}
+                {{ form.first_name(class="form-control form-control-lg", placeholder="Adınız") }}
+                {% if form.first_name.errors %}
+                  <div class="invalid-feedback d-block">
+                      {% for error in form.first_name.errors %}{{ error }}{% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.last_name.label(class="form-label fw-bold") }}
+                {{ form.last_name(class="form-control form-control-lg", placeholder="Soyadınız") }}
+                 {% if form.last_name.errors %}
+                  <div class="invalid-feedback d-block">
+                      {% for error in form.last_name.errors %}{{ error }}{% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              {{ form.email.label(class="form-label fw-bold") }}
+              {{ form.email(class="form-control form-control-lg", placeholder="ornek@site.com") }}
+              {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.email.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="phone_number" class="form-label fw-bold">
+                    Telefon Numarası <span class="text-danger">*</span>
+                </label>
+                {{ form.phone_number(class="form-control form-control-lg", placeholder="5xxxxxxxxx", id="phone_number") }}
+                {% if form.phone_number.errors %}
+                  <div class="invalid-feedback d-block">
+                      {% for error in form.phone_number.errors %}{{ error }}{% endfor %}
+                  </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.apartment_id.label(class="form-label fw-bold") }}
+              {{ form.apartment_id(class="form-select form-select-lg", id="apartment-select") }}
+              {% if form.apartment_id.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.apartment_id.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3" id="block-container" style="display: none;"> {{ form.block_id.label(class="form-label fw-bold") }}
+              {{ form.block_id(class="form-select form-select-lg", id="block-select") }}
+               {% if form.block_id.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.block_id.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="mb-3">
+              {{ form.daire_no.label(class="form-label fw-bold") }}
+              {{ form.daire_no(class="form-control form-control-lg", placeholder="Örn: 5") }}
+              {% if form.daire_no.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.daire_no.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+            <div class="mb-3 position-relative">
+              {{ form.password.label(class="form-label fw-bold") }}
+              <div class="input-group">
+                {{ form.password(class="form-control form-control-lg", id="password", placeholder="En az 8 karakter") }}
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                  <i class="bi bi-eye-slash"></i>
+                </button>
+              </div>
+              {% if form.password.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.password.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3 position-relative">
+              {{ form.confirm_password.label(class="form-label fw-bold") }}
+               <div class="input-group">
+                {{ form.confirm_password(class="form-control form-control-lg", id="confirm_password", placeholder="Şifrenizi doğrulayın") }}
+                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                  <i class="bi bi-eye-slash"></i>
+                </button>
+              </div>
+              {% if form.confirm_password.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.confirm_password.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-check mb-2">
+              {{ form.accept_terms(class="form-check-input", id="accept_terms") }}
+              <label class="form-check-label small" for="accept_terms">
+                  <a href="{{ url_for('public.terms') }}" target="_blank">Kullanım Şartları</a> ve 
+                  <a href="{{ url_for('public.privacy') }}" target="_blank">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.
+              </label>
+            </div>
+
+            <div class="form-check mb-3">
+              {{ form.accept_kvkk(class="form-check-input", id="accept_kvkk") }}
+              <label class="form-check-label small" for="accept_kvkk">
+                  <a href="{{ url_for('public.kvkk') }}" target="_blank">KVKK Aydınlatma Metni</a>'ni okudum.
+              </label>
+            </div>
+            
+            {% if form.accept_terms.errors or form.accept_kvkk.errors %}
+              <div class="alert alert-danger p-2 small mt-2">
+                {% for error in form.accept_terms.errors %}{{ error }}<br>{% endfor %}
+                {% for error in form.accept_kvkk.errors %}{{ error }}{% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary btn-lg" id="signupBtn">Hesabımı Oluştur</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card-footer text-center bg-light py-3">
+          <small>Zaten bir hesabınız var mı? <a href="{{ url_for('auth.login') }}">Giriş Yapın</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/auth_signup.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const apartmentSelect = document.getElementById('apartment-select');
+    const blockContainer = document.getElementById('block-container');
+    const blockSelect = document.getElementById('block-select');
+    const allBlockOptions = document.querySelector('#all-blocks-data').innerHTML;
+
+    apartmentSelect.addEventListener('change', function() {
+        const selectedApartmentId = this.value;
+
+        blockSelect.innerHTML = '<option value="0">Blok Seçin</option>';
+        blockContainer.style.display = 'none';
+
+        if (selectedApartmentId && selectedApartmentId !== '0') {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = allBlockOptions;
+            
+            const filteredOptions = tempDiv.querySelectorAll(`option[data-apartment-id="${selectedApartmentId}"]`);
+
+            if (filteredOptions.length > 0) {
+                filteredOptions.forEach(function(opt) {
+                    blockSelect.appendChild(opt.cloneNode(true));
+                });
+
+                blockContainer.style.display = 'block';
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

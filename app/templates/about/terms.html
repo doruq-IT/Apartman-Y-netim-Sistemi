@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Kullanım Koşulları{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  {# Bu sayfanın "resmi" adresinin bu olduğunu arama motorlarına söyler #}
+  <link rel="canonical" href="{{ url_for('public.terms', _external=True) }}">
+{% endblock head %}
+
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="card p-4">
+
+    <h4>Kullanım Koşulları</h4>
+    <p class="text-muted">
+      FlatNetSite’ı ziyaret ederek veya kullanarak, aşağıda belirtilen şartları ve politikaları kabul etmiş
+      sayılırsınız. Bu koşullar, hizmetlerimizin kullanımına ilişkin hak ve yükümlülüklerinizi düzenlemektedir.
+    </p>
+    <hr class="my-4">
+
+    <h5>1. Taraflar ve Konu</h5>
+    <p>
+      İşbu Kullanım Koşulları, FlatNetSite’a “Sakin” veya “Yönetici” olarak erişen tüm kullanıcılar ile
+      <strong>Okan KURTAR – Şahıs Şirketi</strong> arasında akdedilmiştir.
+      FlatNetSite, apartman yönetimi süreçlerini dijitalleştiren bir platformdur; üyelik, duyuru, aidat takibi,
+      talep ve rezervasyon işlemlerini kapsar.
+    </p>
+
+    <h5>2. Tanımlar</h5>
+    <ul>
+      <li><strong>FlatNetSite:</strong> Bu apartman yönetim platformunun tamamını (web sitesi, yazılım ve uygulamalar) ifade eder.</li>
+      <li><strong>Yönetici:</strong> Kat Mülkiyeti Kanunu’na göre atanmış yönetici veya yönetim kurulu.</li>
+      <li><strong>Sakin:</strong> Yönetici tarafından onaylanmış kullanıcı (kat maliki, kiracı vb.).</li>
+      <li><strong>İçerik:</strong> Kullanıcıların sisteme yüklediği mesaj, talep, belge ve veriler.</li>
+    </ul>
+
+    <h5>3. Üyelik ve Hesap Güvenliği</h5>
+    <p>
+      Hesap oluştururken verdiğiniz bilgilerin doğru ve güncel olması sizin sorumluluğunuzdadır. Hesap
+      bilgilerinizin güvenliğini korumakla yükümlüsünüz; şifrenizi üçüncü kişilerle paylaşamazsınız. Hesabınızdan
+      yapılan tüm işlemler size ait kabul edilir.
+    </p>
+    <p>
+      Profil sayfanızdan bilgilerinizi güncelleyebilir veya hesabınızı silebilirsiniz. Silme işlemleri sonucunda
+      verilerinizin akıbeti <a href="{{ url_for('public.privacy') }}">Gizlilik Politikası</a> ve
+      <a href="{{ url_for('public.kvkk') }}">KVKK Aydınlatma Metni</a>’nde açıklanmıştır.
+    </p>
+
+    <h5>4. Tarafların Hak ve Yükümlülükleri</h5>
+    <ul>
+      <li>FlatNetSite, kullanıcılar arasında apartman yönetimi amaçlı iletişim sağlayan bir platformdur; kullanıcıların oluşturduğu içerikten sorumlu değildir.</li>
+      <li>Kullanıcılar, kanuna ve ahlaka aykırı, hakaret içeren veya üçüncü kişilerin haklarını ihlal eden içerik paylaşamaz.</li>
+      <li>Kullanıcılar, FlatNetSite’ı kullanırken 18 yaşını doldurmuş olduklarını ve yasal ehliyet sahibi olduklarını beyan eder.</li>
+      <li>Kullanıcıların sisteme yükledikleri içerikler yalnızca ilgili apartman yönetimi kapsamında kullanılır.</li>
+      <li>FlatNetSite, gerekli gördüğünde duyuru yaparak hizmetlerinde değişiklik yapabilir veya hizmeti sonlandırabilir.</li>
+      <li>
+        FlatNetSite, Kat Mülkiyeti Kanunu (KMK) kapsamındaki yasal süreçleri (genel kurul toplantı duyuruları, karar tebligatları vb.) dijital ortamda kolaylaştırmayı amaçlayan bir araçtır. Platform üzerinden yapılan duyuru ve bildirimlerin KMK uyarınca resmi tebligat yerine geçmesi, ancak kat malikleri kurulunun bu yönde alacağı bir kararla mümkündür. Platform, yasal usullere uygun tebligat yapma sorumluluğunu ortadan kaldırmaz.
+      </li>
+    </ul>
+    <h5>4.1. Hukuka Aykırı İçerik ve Bildir-Kaldır Prosedürü</h5>
+    <p>
+      FlatNetSite, bir yer sağlayıcı olarak, kullanıcılar tarafından oluşturulan içerikleri önceden denetlemez. Platformumuzda hukuka aykırı, kişilik haklarını ihlal eden veya suç unsuru taşıyan bir içerik (mesaj, duyuru, belge vb.) tespit etmeniz halinde, lütfen <strong><a href="mailto:flatnetsite@gmail.com">flatnetsite@gmail.com</a></strong> adresine gerekçelerinizle birlikte bildirimde bulununuz. Hukuka uygun ve geçerli talepler en geç 48 saat içinde değerlendirilerek ilgili içerik platformdan kaldırılacaktır.
+    </p>
+
+    <h5>5. Fikri Mülkiyet Hakları</h5>
+    <p>
+      FlatNetSite’ın yazılımı, tasarımı, görselleri ve içerikleri geliştiriciye aittir. İzinsiz kopyalanması, değiştirilmesi,
+      dağıtılması yasaktır. Sistemin güvenliğini tehdit eden veya çalışmasını engelleyen girişimlerde bulunmak yasaktır.
+    </p>
+
+    <h5>6. Çerezler ve Gizlilik</h5>
+    <p>
+      Profil sayfanızdan bilgilerinizi güncelleyebilir veya hesabınızı silebilirsiniz. Silme işlemleri sonucunda
+      verilerinizin akıbeti <a href="{{ url_for('public.privacy') }}">Gizlilik Politikası</a> ve
+      <a href="{{ url_for('public.kvkk') }}">KVKK Aydınlatma Metni</a>’nde açıklanmıştır.
+    </p>
+
+    <h5>7. Sorumluluğun Sınırlandırılması</h5>
+    <p>
+      FlatNetSite “olduğu gibi” sunulmaktadır. Teknik kesinti, veri kaybı veya erişim sorunları yaşanabilir.
+      Hizmetin kesintisiz ve hatasız olacağına dair garanti verilmez. Kullanıcılar, hizmetin kullanımıyla ilgili
+      riskleri kabul eder. Kullanıcılar, hizmetin kullanımıyla ilgili riskleri kabul eder. 
+      <strong>Bu sorumluluk sınırlandırması, FlatNetSite’ın ağır kusuru veya kastı bulunan durumlar için geçerli değildir.</strong>
+    </p>
+
+    <h5>8. Sözleşmenin Feshi</h5>
+    <p>
+      Kullanım koşullarına aykırı davranış, kötüye kullanım veya yasal risk oluşturması halinde FlatNetSite,
+      üyeliğinizi askıya alma veya sonlandırma hakkını saklı tutar. Kullanıcı da hesabını dilediği an
+      kapatabilir.
+    </p>
+
+    <h5>9. Uyuşmazlıkların Çözümü</h5>
+    <p>
+      İşbu sözleşmeden doğan uyuşmazlıklarda Türkiye Cumhuriyeti kanunları uygulanır. Balıkesir/Edremit
+      Mahkemeleri ve İcra Daireleri yetkilidir.
+    </p>
+
+    <h5>10. Koşulların Güncellenmesi</h5>
+    <p>
+      FlatNetSite, bu koşulları zaman zaman güncelleyebilir. Güncel sürüm web sitemizde yayımlanır ve yayımlandığı
+      tarihten itibaren geçerli olur.
+    </p>
+    <p class="text-sm text-muted"><em>Son Güncelleme: 4 Eylül 2025</em></p>
+
+  </div>
+</div>
+{% endblock %}

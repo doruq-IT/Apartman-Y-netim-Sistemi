@@ -1,0 +1,23 @@
+<!-- app/templates/email/new_user_for_approval.html -->
+<!doctype html>
+<html lang="tr">
+  <body>
+    <p>Merhaba Yönetici,</p>
+
+    <p>
+      <strong>{{ user.full_name }}</strong> ({{ user.email }})
+      yeni bir hesap oluşturdu ve e-posta adresini doğruladı.
+    </p>
+
+    <p>
+      Kullanıcıyı onaylamak veya reddetmek için
+      <a href="{{ url_for('admin.pending_users', _external=True) }}">
+        yönetim panelindeki “Bekleyen Kullanıcılar” sayfasına
+      </a> gidin.
+    </p>
+
+    <p>İyi çalışmalar !</p>
+    <hr />
+    <small>Apartman Yönetim Sistemi · Bu e-posta otomatik gönderilmiştir.</small>
+  </body>
+</html>

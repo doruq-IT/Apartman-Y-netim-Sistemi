@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Yeni Apartman Ekle{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-building-fill-add me-2"></i>Yeni Apartman / Site Kaydı
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="addApartmentForm" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {% if form.name.errors %}
+                                {{ form.name(class="form-control is-invalid", placeholder="Örn: Mavişehir Sitesi") }}
+                                <div class="invalid-feedback">{% for error in form.name.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.name(class="form-control", placeholder="Örn: Mavişehir Sitesi") }}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.address.label(class="form-label") }}
+                            {% if form.address.errors %}
+                                {{ form.address(class="form-control is-invalid", placeholder="Apartmanın açık adresini girin...") }}
+                                <div class="invalid-feedback">{% for error in form.address.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.address(class="form-control", placeholder="Apartmanın açık adresini girin...") }}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('superadmin.dashboard') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>İptal
+                    </a>
+                    <button type="submit" form="addApartmentForm" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-2"></i>Apartmanı Oluştur
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

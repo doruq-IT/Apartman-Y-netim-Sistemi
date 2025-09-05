@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Belge Yükle{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header text-center bg-primary text-white py-3">
+          <h4 class="mb-0">
+            <i class="bi bi-file-earmark-arrow-up-fill me-2"></i>Belge Yükle
+          </h4>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="documentUploadForm" novalidate>
+          {{ form.hidden_tag() }}
+
+          <div class="card-body p-4">
+
+            <!-- Belge Türü (Dropdown) -->
+            <div class="mb-4">
+              <label for="doc_type" class="form-label fw-bold">Belge Türü</label>
+              <select id="doc_type" name="doc_type"
+                      class="form-select form-select-lg{% if form.doc_type.errors %} is-invalid{% endif %}">
+                <option value="" selected disabled>Seçiniz</option>
+                <option value="Kira Kontratı">Kira Kontratı</option>
+                <option value="Kimlik (maskeli)">Kimlik (maskeli)</option>
+                <option value="Ruhsat">Ruhsat</option>
+                <option value="Aşı Karnesi">Aşı Karnesi</option>
+                <option value="Taşınma Belgesi">Taşınma Belgesi</option>
+                <option value="Tadilat İzni">Tadilat İzni</option>
+                <option value="Ek Hane Halkı">Ek Hane Halkı</option>
+                <option value="Diğer">Diğer</option>
+              </select>
+              {% if form.doc_type.errors %}
+                <div class="invalid-feedback">
+                  {% for error in form.doc_type.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Dosya</label>
+
+              <div id="file-drop-zone"
+                   class="border-2 border-dashed rounded-3 text-center p-5 cursor-pointer {{ 'border-danger' if form.file.errors else 'border-secondary' }}">
+                <div id="file-preview-wrapper" class="mb-3" style="display:none;"></div>
+
+                <div id="upload-prompt">
+                  <i class="bi bi-cloud-arrow-up-fill fs-1 text-primary"></i>
+                  <p class="mb-1">Dosyanızı sürükleyin ya da seçmek için tıklayın.</p>
+                  <p class="text-muted small">JPG, PNG veya PDF. Maks 5 MB.</p>
+                </div>
+              </div>
+
+              <div class="d-none">
+                {{ form.file(class="form-control" + (" is-invalid" if form.file.errors else ""), id="file-input", accept="image/*,application/pdf") }}
+              </div>
+
+              {% if form.file.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.file.errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+          </div>
+
+          <div class="card-footer bg-light text-end p-3">
+            <a href="{{ url_for('resident.dashboard') }}" class="btn btn-secondary me-2">
+              <i class="bi bi-x-circle me-2"></i>İptal
+            </a>
+            <button type="submit" class="btn btn-primary" id="submit-button">
+              <span id="loading-spinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display:none;"></span>
+              <i class="bi bi-check-circle-fill me-2" id="submit-icon"></i>
+              <span id="submit-text">Belgeyi Yükle</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/document_upload.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% macro render_field(field, attrs=None) %}
+    <div class="mb-3">
+        {{ field.label(class="form-label fw-bold") }}
+
+        {% if field.errors %}
+            {{ field(class="form-control is-invalid", **(attrs or {})) }}
+            <div class="invalid-feedback">
+                {% for error in field.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ field(class="form-control", **(attrs or {})) }}
+        {% endif %}
+        
+        {% if field.description %}
+            <small class="form-text text-muted">{{ field.description }}</small>
+        {% endif %}
+    </div>
+{% endmacro %}

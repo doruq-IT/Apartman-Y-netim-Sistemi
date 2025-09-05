@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">{{ title }}</h2>
+</div>
+
+{% if areas %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for area in areas %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ area.name }}</h5>
+                <p class="card-text">{{ area.description or 'Bu alan için özel bir açıklama bulunmamaktadır.' }}</p>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                {# Bir sonraki adımda bu linki takvim sayfasına yönlendireceğiz #}
+                <a href="{{ url_for('resident.reservation_calendar', area_id=area.id) }}" class="btn btn-primary w-100">Rezervasyon Yap</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    Apartmanınızda henüz rezervasyona açık bir ortak alan bulunmamaktadır.
+</div>
+{% endif %}
+
+{% endblock %}

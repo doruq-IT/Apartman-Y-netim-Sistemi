@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Gizlilik Politikası{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+  {# Bu sayfanın "resmi" adresinin bu olduğunu arama motorlarına söyler #}
+  <link rel="canonical" href="{{ url_for('public.privacy', _external=True) }}">
+{% endblock head %}
+
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="card p-4">
+
+    <h4>Gizlilik Politikası</h4>
+    <p>
+      Gizliliğiniz bizim için önemlidir. Bu politika, Apartman Yönetim Sistemi (“FlatNetSite”)’ni kullanırken
+      hangi kişisel verilerinizi topladığımızı, bunları neden kullandığımızı, ne kadar süre sakladığımızı ve
+      nasıl koruduğumuzu açıklamaktadır.
+    </p>
+    <hr>
+
+    <h5>1. Hangi Bilgileri Topluyoruz?</h5>
+    <p>
+      Hizmetlerimizi sunabilmek için yalnızca gerekli olan temel bilgileri topluyoruz:
+    </p>
+    <ul>
+      <li><strong>Kimlik Bilgileri:</strong> Adınız, Soyadınız</li>
+      <li><strong>İletişim Bilgileri:</strong> E-posta adresiniz, isteğe bağlı telefon numaranız</li>
+      <li><strong>Adres ve Daire Bilgisi:</strong> Apartman adı, blok no, daire no</li>
+      <li><strong>Finansal Veriler:</strong> Aidat ödeme kayıtları, makbuzlar</li>
+      <li><strong>Talep ve Rezervasyon Verileri:</strong> Yönetime ilettiğiniz talepler, şikayetler, ortak alan rezervasyon bilgileri</li>
+      <li><strong>IP Adresi ve Giriş Kayıtları:</strong> Güvenlik ve yasal yükümlülükler için saklanan log verileri</li>
+    </ul>
+    <p><strong>Not:</strong> TC Kimlik Numarası, din, etnik köken gibi özel nitelikli veriler talep edilmez ve saklanmaz.</p>
+
+    <h5>2. Verilerinizi Neden Kullanıyoruz?</h5>
+    <p>
+      Topladığımız veriler şu amaçlarla kullanılmaktadır:
+    </p>
+    <ul>
+      <li>Hesap oluşturma ve güvenli giriş sağlama</li>
+      <li>Yönetim tarafından bildirim ve duyuru gönderme</li>
+      <li>Aidat ve finansal işlemleri yönetme</li>
+      <li>Talep/şikayet ve rezervasyon süreçlerini yürütme</li>
+      <li>Yasal yükümlülüklerimizi yerine getirme</li>
+    </ul>
+
+    <h5>3. Bilgilerinizi Paylaşıyor muyuz?</h5>
+    <p>
+      Kişisel verileriniz, yasal zorunluklar dışında üçüncü kişilerle paylaşılmaz. Ancak barındırma (Google Cloud),
+      e-posta bildirim servisleri gibi hizmet sağlayıcılarla yalnızca hizmetin yerine getirilmesi amacıyla paylaşılır.
+      Bu paylaşım KVKK hükümlerine uygun şekilde yapılır.
+    </p>
+
+    <h5>4. Verileriniz Ne Kadar Süre Saklanır?</h5>
+    <p>
+      Kişisel verileriniz, hizmet süresi boyunca ve ilgili mevzuatta belirtilen süreler boyunca saklanır. Örneğin:
+    </p>
+    <ul>
+      <li>Finansal kayıtlar (aidat, makbuz): 10 yıl</li>
+      <li>Destek talepleri: 1 yıl</li>
+      <li>Rezervasyon ve talep kayıtları: 1 yıl</li>
+    </ul>
+    <p>
+      Hesabınızı sildiğinizde, yasal olarak daha uzun süre tutulması gerekmeyen (örneğin, destek talepleriniz 1 yıl sonra) kişisel verileriniz, bu sürelerin sonunda kalıcı olarak silinir veya kimliğinizle ilişkilendirilemeyecek şekilde anonimleştirilir. Finansal kayıtlar gibi yasal saklama süresi zorunluluğu olan veriler ise bu sürenin sonuna kadar saklanmaya devam eder.
+    </p>
+
+    <h5>5. Çerez Politikası</h5>
+    <p>
+      FlatNetSite, kullanıcı deneyimini geliştirmek ve site performansını izlemek için çerezler kullanır. Zorunlu olmayan
+      çerezler için açık rıza alınmadan bu çerezler yerleştirilmez ve çalıştırılmaz.
+    </p>
+    <ul>
+      <li><strong>Zorunlu Çerezler:</strong> Oturum açma ve güvenlik için gereklidir. Bu çerezler olmadan temel fonksiyonlar çalışmaz.</li>
+      <li><strong>Performans/Analitik Çerezleri:</strong> Trafik ve kullanım istatistikleri için kullanılır ve <em>açık rızanıza tabidir</em>.</li>
+      <li><strong>İşlevsel Çerezler:</strong> Kullanıcı tercihlerinizi (dil, tema vb.) hatırlamak için kullanılır ve <em>açık rızanıza tabidir</em>.</li>
+    </ul>
+    <p>
+      Site ilk ziyaretinizde gösterilen çerez bildirimi aracılığıyla <strong>Kabul Et</strong> veya <strong>Reddet</strong> seçeneklerini
+      kullanabilirsiniz. Dilediğiniz zaman rızanızı geri çekmek veya tercihlerinizi değiştirmek için
+      <a href="{{ url_for('public.cookie_settings') }}">Çerez Tercihleri</a> bölümünü ziyaret edebilirsiniz.
+      (Ayrıca site alt bilgisinde “Çerez Tercihleri” bağlantısı yer alır.)
+    </p>
+    <p>
+      Tarayıcı ayarlarınıza göre çerezleri yönetebilir veya silebilirsiniz. Çerezleri devre dışı bırakmanız durumunda bazı özellikler
+      çalışmayabilir. Üçüncü taraf çerezleri kullanılması halinde, bu çerezlerin sağlayıcıları ve amaçları “Çerez Tercihleri”
+      bölümünde listelenir.
+    </p>
+
+    <h5>6. Haklarınız</h5>
+    <p>
+      KVKK kapsamında kişisel verileriniz üzerinde erişim, düzeltme, silme ve işleme itraz etme hakkınız vardır.
+      Haklarınızı nasıl kullanacağınızı öğrenmek için
+      <a href="{{ url_for('public.kvkk') }}">KVKK Aydınlatma Metni</a>’mizi inceleyin.
+    </p>
+    <p class="text-sm text-muted"><em>Son Güncelleme: 4 Eylül 2025</em></p>
+
+  </div>
+</div>
+{% endblock %}

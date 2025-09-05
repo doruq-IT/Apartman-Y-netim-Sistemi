@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Talebinize Yanıt Verildi</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 600px; margin: 20px auto; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
+        .quote-box { background-color: #f8f9fa; padding: 15px; border-left: 4px solid #198754; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Talebinize Yanıt Verildi</h3>
+        <p>Merhaba {{ resident_name }},</p>
+        <p>
+            <strong>"{{ request_title }}"</strong> başlıklı talebinize yönetim tarafından bir yanıt verilmiştir.
+        </p>
+        
+        <div class="quote-box">
+            <strong>Yöneticinin Yanıtı:</strong>
+            <p style="margin-top: 5px;"><em>{{ request_reply }}</em></p>
+        </div>
+        
+        <p>
+            Talebinizin tüm detaylarını ve güncel durumunu görmek için lütfen aşağıdaki butona tıklayın:
+        </p>
+        
+        <p>
+            <a href="{{ url_for('resident.view_request', request_id=request_id, _external=True) }}" class="button">
+                Talebimi Görüntüle
+            </a>
+        </p>
+        
+        <p class="footer">
+            Bu e-posta, Apartman Yönetim Sistemi tarafından otomatik olarak gönderilmiştir.
+        </p>
+    </div>
+</body>
+</html>

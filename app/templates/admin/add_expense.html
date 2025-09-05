@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Yeni Masraf Ekle{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-wallet2 me-2"></i>Yeni Masraf Kaydı
+                    </h4>
+                    <p class="text-muted mb-0 small">Apartman için yapılan genel harcamaları kaydedin.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="expenseForm" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {% if form.description.errors %}
+                                {{ form.description(class="form-control is-invalid", rows="4", placeholder="Örn: Havuz kimyasalları alımı, bahçe bakımı vb.") }}
+                                <div class="invalid-feedback">{% for error in form.description.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.description(class="form-control", rows="4", placeholder="Örn: Havuz kimyasalları alımı, bahçe bakımı vb.") }}
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.amount.label(class="form-label") }}
+                                {% if form.amount.errors %}
+                                    {{ form.amount(class="form-control is-invalid", placeholder="Örn: 750.50") }}
+                                    <div class="invalid-feedback">{% for error in form.amount.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                                {% else %}
+                                    {{ form.amount(class="form-control", placeholder="Örn: 750.50") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.expense_date.label(class="form-label") }}
+                                {% if form.expense_date.errors %}
+                                    {{ form.expense_date(class="form-control is-invalid", type="date") }}
+                                    <div class="invalid-feedback">{% for error in form.expense_date.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                                {% else %}
+                                    {{ form.expense_date(class="form-control", type="date") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.invoice.label(class="form-label") }}
+                             {% if form.invoice.errors %}
+                                {{ form.invoice(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">{% for error in form.invoice.errors %}<span>{{ error }}</span>{% endfor %}</div>
+                            {% else %}
+                                {{ form.invoice(class="form-control") }}
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                İzin verilen dosya türleri: JPG, PNG, PDF.
+                            </small>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>İptal
+                    </a>
+                    <button type="submit" form="expenseForm" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-2"></i>Masrafı Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

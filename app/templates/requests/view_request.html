@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-ticket-detailed me-2"></i>Talep Detayı
+          </h4>
+          <div>
+            {% if req.status %}
+              {% set s = (req.status.value if req.status is not string and req.status is defined and req.status is not none and req.status.__class__.__name__ != 'str' else req.status)|string %}
+              {% set s = s|lower %}
+              {% if 'tamam' in s %}
+                <span class="badge bg-success">Tamamlandı</span>
+              {% elif 'işlem' in s or 'islem' in s %}
+                <span class="badge bg-warning text-dark">İşlemde</span>
+              {% else %}
+                <span class="badge bg-secondary">Beklemede</span>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-3">Başlık</dt>
+            <dd class="col-sm-9">{{ req.title }}</dd>
+
+            <dt class="col-sm-3">Kategori</dt>
+            <dd class="col-sm-9">{{ req.category or '—' }}</dd>
+
+            <dt class="col-sm-3">Öncelik</dt>
+            <dd class="col-sm-9">{{ req.priority or '—' }}</dd>
+
+            <dt class="col-sm-3">Konum</dt>
+            <dd class="col-sm-9">
+              {% if req.location %}
+                {% if req.location == 'diger' and req.location_other %}
+                  Diğer — {{ req.location_other }}
+                {% else %}
+                  {{ req.location }}
+                {% endif %}
+              {% else %}—{% endif %}
+            </dd>
+
+            <dt class="col-sm-3">Açıklama</dt>
+            <dd class="col-sm-9">
+              <pre class="mb-0" style="white-space: pre-wrap">{{ req.description }}</pre>
+            </dd>
+
+            <dt class="col-sm-3">Oluşturulma</dt>
+            <dd class="col-sm-9 utc-date">
+              {% if req.created_at %}{{ req.created_at.isoformat() }}{% else %}—{% endif %}
+            </dd>
+
+            <dt class="col-sm-3">Güncelleme</dt>
+            <dd class="col-sm-9 utc-date">
+              {% if req.updated_at %}{{ req.updated_at.isoformat() }}{% else %}—{% endif %}
+            </dd>
+
+            <dt class="col-sm-3">Ek</dt>
+            <dd class="col-sm-9">
+              {% if req.attachment_url %}
+                <a class="btn btn-sm btn-outline-primary" href="{{ req.attachment_url }}" target="_blank" rel="noopener">
+                  <i class="bi bi-paperclip me-1"></i>Belgeyi Aç
+                </a>
+              {% else %}
+                — 
+              {% endif %}
+            </dd>
+          </dl>
+          {% if req.reply %}
+            <hr class="my-4">
+            <h5 class="card-title"><i class="bi bi-chat-left-text-fill me-2 text-primary"></i>Yönetici Yanıtı</h5>
+            <div class="alert alert-light mt-3">
+              <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ req.reply }}</pre>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="card-footer bg-light text-end">
+          <a href="{{ url_for('resident_request.request_list') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Geri Dön
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

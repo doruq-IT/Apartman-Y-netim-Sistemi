@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center card-header-responsive">
+                <h4 class="mb-0">
+                    <i class="bi bi-megaphone-fill me-2"></i>Duyurular
+                </h4>
+                {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('announcement.create_announcement') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Yeni Duyuru Ekle
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if announcements %}
+                {% for announcement in announcements %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">{{ announcement.title }}</h5>
+                            <small class="text-muted">{{ announcement.created_at.strftime('%d.%m.%Y') }}</small>
+                        </div>
+                        <hr>
+                        <p class="card-text">{{ announcement.content|safe }}</p>
+
+                        {% if current_user.role == 'admin' %}
+                        <div class="text-end mt-3">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('announcement.edit_announcement', announcement_id=announcement.id) }}">
+                                <i class="bi bi-pencil-fill me-1"></i>Düzenle
+                            </a>
+                            <form method="POST" action="{{ url_for('announcement.delete_announcement', announcement_id=announcement.id) }}" style="display:inline;" onsubmit="return confirm('Bu duyuruyu silmek istediğinize emin misiniz?');">
+                                {{ form.csrf_token }}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash-fill me-1"></i>Sil
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                {% if pagination and pagination.pages > 1 %}
+                <nav aria-label="Duyuru sayfaları" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('announcement.announcements', page=pagination.prev_num) }}">Önceki</a>
+                        </li>
+
+                        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                            {% if page_num %}
+                                {% if pagination.page == page_num %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('announcement.announcements', page=page_num) }}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('announcement.announcements', page=pagination.next_num) }}">Sonraki</a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Henüz bir duyuru yok!</h4>
+                    <p class="mb-0">Görüntülenecek güncel bir duyuru bulunmamaktadır.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

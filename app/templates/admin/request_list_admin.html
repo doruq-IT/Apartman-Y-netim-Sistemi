@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-inbox-fill me-2"></i>Gelen Kullanıcı Talepleri
+            </h4>
+        </div>
+
+        <div class="card-body">
+            <form method="get" class="row g-3 mb-4 align-items-end">
+                <div class="col-md-2">
+                    <label for="category" class="form-label">Kategori</label>
+                    <select name="category" id="category" class="form-select">
+                        <option value="">Tümü</option>
+                        <option value="Arıza" {{ 'selected' if request.args.get('category') == 'Arıza' else '' }}>Arıza</option>
+                        <option value="Bakım" {{ 'selected' if request.args.get('category') == 'Bakım' else '' }}>Bakım</option>
+                        <option value="Yeni talep" {{ 'selected' if request.args.get('category') == 'Yeni talep' else '' }}>Yeni talep</option>
+                        <option value="Diğer" {{ 'selected' if request.args.get('category') == 'Diğer' else '' }}>Diğer</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="priority" class="form-label">Öncelik</label>
+                    <select name="priority" id="priority" class="form-select">
+                        <option value="">Tümü</option>
+                        <option value="Düşük" {{ 'selected' if request.args.get('priority') == 'Düşük' else '' }}>Düşük</option>
+                        <option value="Orta" {{ 'selected' if request.args.get('priority') == 'Orta' else '' }}>Orta</option>
+                        <option value="Yüksek" {{ 'selected' if request.args.get('priority') == 'Yüksek' else '' }}>Yüksek</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="status" class="form-label">Durum</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">Tümü</option>
+                        <option value="Beklemede" {{ 'selected' if request.args.get('status') == 'Beklemede' else '' }}>Beklemede</option>
+                        <option value="İşlemde" {{ 'selected' if request.args.get('status') == 'İşlemde' else '' }}>İşlemde</option>
+                        <option value="Tamamlandı" {{ 'selected' if request.args.get('status') == 'Tamamlandı' else '' }}>Tamamlandı</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="content_search" class="form-label">Başlık veya İçerikte Ara</label>
+                    <input type="text" name="content_search" id="content_search" class="form-control"
+                           placeholder="Anahtar kelime girin..."
+                           value="{{ request.args.get('content_search', '') }}">
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary me-2 w-100">Filtrele</button>
+                    <a href="{{ url_for('admin.all_requests') }}" class="btn btn-secondary w-100 mt-2">Temizle</a>
+                </div>
+            </form>
+
+            {% if requests %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" style="width: 5%;">#ID</th>
+                                <th scope="col" style="width: 14%;">Gönderen</th>
+                                <th scope="col" style="width: 18%;">Başlık</th>
+                                <th scope="col" style="width: 10%;">Kategori</th>
+                                <th scope="col" style="width: 8%;">Öncelik</th>
+                                <th scope="col" style="width: 12%;">Konum</th>
+                                <th scope="col" style="width: 8%;">Ek</th>
+                                <th scope="col" style="width: 12%;">Tarih</th>
+                                <th scope="col" style="width: 8%;">Durum</th>
+                                <th scope="col" class="text-center" style="width: 15%;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <th scope="row">{{ req.id }}</th>
+                                <td>{{ req.user.name if req.user else '—' }}</td>
+                                <td class="text-truncate" style="max-width: 240px;">{{ req.title }}</td>
+
+                                <td>{{ req.category or '—' }}</td>
+                                <td>{{ req.priority or '—' }}</td>
+                                <td class="text-truncate" style="max-width: 200px;">{{ req.location or '—' }}</td>
+                                <td>
+                                    {% if req.attachment_url %}
+                                        <a href="{{ req.attachment_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-paperclip me-1"></i>Aç
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="utc-date">{{ req.created_at.isoformat() if req.created_at else '—' }}</td>
+                                <td>
+                                    {% if req.status.value == 'Beklemede' or req.status == 'Beklemede' %}
+                                        <span class="badge bg-warning text-dark">Beklemede</span>
+                                    {% elif req.status.value == 'İşlemde' or req.status == 'İşlemde' %}
+                                        <span class="badge bg-info text-dark">İşlemde</span>
+                                    {% elif req.status.value == 'Tamamlandı' or req.status == 'Tamamlandı' %}
+                                        <span class="badge bg-success">Tamamlandı</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ req.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ url_for('admin.reply_request', request_id=req.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil-square me-1"></i>İncele / Yanıtla
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if pagination and pagination.pages > 1 %}
+                <nav aria-label="Talep listesi sayfaları" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{{ url_for('admin.all_requests',
+                                    page=pagination.prev_num,
+                                    category=request.args.get('category'),
+                                    priority=request.args.get('priority'),
+                                    status=request.args.get('status')) }}">
+                                Önceki
+                            </a>
+                        </li>
+
+                        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                            {% if page_num %}
+                                {% if pagination.page == page_num %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="{{ url_for('admin.all_requests',
+                                                page=page_num,
+                                                category=request.args.get('category'),
+                                                priority=request.args.get('priority'),
+                                                status=request.args.get('status')) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">…</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{{ url_for('admin.all_requests',
+                                    page=pagination.next_num,
+                                    category=request.args.get('category'),
+                                    priority=request.args.get('priority'),
+                                    status=request.args.get('status')) }}">
+                                Sonraki
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+                <!-- /Pagination -->
+
+            {% else %}
+                <div class="alert alert-success text-center">
+                    <h4 class="alert-heading"><i class="bi bi-patch-check-fill"></i> Harika!</h4>
+                    <p class="mb-0">Yanıtlanmayı veya incelenmeyi bekleyen herhangi bir talep bulunmamaktadır.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

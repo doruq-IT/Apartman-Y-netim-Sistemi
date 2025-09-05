@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlatNetSite - Modern ve Kolay Apartman Yönetim Sistemi</title>
+    <meta name="description" content="FlatNetSite ile apartman ve site yönetiminizi dijitale taşıyın. Aidat takibi, online ödeme, duyurular ve daha fazlası için en kolay çözüm.">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <style>
+      html,
+      body {
+        overflow-x: hidden;
+        width: 100%;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .hero-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-size: 200% 200%;
+        animation: gradient-animation 10s ease infinite;
+      }
+      @keyframes gradient-animation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .nav-link-active {
+        background-color: #4f46e5;
+        color: white !important;
+      }
+      @keyframes slideUp {
+        from { transform: translateY(100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .animate-slide-up {
+        animation: slideUp 0.6s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div id="loader-overlay">
+        <div class="loader-spinner"></div>
+    </div>
+    <div class="overflow-x-hidden">
+      <nav
+        class="bg-white/80 backdrop-blur-md shadow-md fixed w-full z-20 top-0"
+      >
+        <div class="px-4 sm:px-6 lg:px-8">
+          <div class="container mx-auto flex items-center justify-between h-16">
+
+            <div class="flex-shrink-0">
+              <a
+                href="{{ url_for('public.index') }}"
+                class="text-2xl font-bold text-gray-800 flex items-center"
+              >
+                <img
+                  src="{{ url_for('static', filename='images/logo.png') }}"
+                  alt="AYS Logo"
+                  class="h-8 mr-2"
+                />
+              </a>
+            </div>
+
+            <div class="flex items-center">
+              <div class="hidden md:flex items-center space-x-4">
+                <a
+                  href="#features"
+                  data-target="features"
+                  class="nav-link-landing text-gray-600 font-medium hover:bg-indigo-600 hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+                  >Özellikler</a
+                >
+                <a
+                  href="#how-it-works"
+                  data-target="how-it-works"
+                  class="nav-link-landing text-gray-600 font-medium hover:bg-indigo-600 hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+                  >Nasıl Çalışır?</a
+                >
+                <a href="{{ url_for('blog.index') }}" class="nav-link-landing text-gray-600 font-medium hover:bg-indigo-600 hover:text-white transition-all duration-300 px-3 py-2 rounded-md">Blog</a>
+                <a
+                  href="{{ url_for('public.contact') }}"
+                  data-target="contact"
+                  class="nav-link-landing text-gray-600 font-medium hover:bg-indigo-600 hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+                  >İletişim</a
+                >
+
+                <div class="flex items-center ml-4">
+                  <a
+                    href="{{ url_for('auth.login') }}"
+                    class="text-gray-600 font-medium hover:text-indigo-600 mr-4 transition-colors duration-300"
+                    >Giriş Yap</a
+                  >
+                  <a
+                    href="{{ url_for('auth.signup') }}"
+                    class="bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-700 transition-all duration-300 shadow-md"
+                    >Kayıt Ol</a
+                  >
+                </div>
+              </div>
+
+              <div class="md:hidden">
+                <button
+                  id="mobile-menu-button"
+                  type="button"
+                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-white hover:bg-indigo-600 focus:outline-none"
+                  aria-controls="mobile-menu"
+                  aria-expanded="false"
+                >
+                  <span class="sr-only">Menüyü aç</span>
+                  <svg
+                    id="hamburger-icon"
+                    class="block h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                  <svg
+                    id="close-icon"
+                    class="hidden h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:hidden hidden" id="mobile-menu">
+          <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a
+              href="#features"
+              class="text-gray-700 hover:bg-indigo-500 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Özellikler</a
+            >
+            <a
+              href="#how-it-works"
+              class="text-gray-700 hover:bg-indigo-500 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Nasıl Çalışır?</a
+            >
+            <a
+              href="{{ url_for('public.contact') }}"
+              class="text-gray-700 hover:bg-indigo-500 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >İletişim</a
+            >
+          </div>
+          <div class="pt-4 pb-3 border-t border-gray-200">
+            <div class="flex items-center px-5">
+              <a
+                href="{{ url_for('auth.login') }}"
+                class="flex-1 text-center bg-gray-200 text-gray-800 py-2 px-4 rounded-md font-medium"
+                >Giriş Yap</a
+              >
+              <a
+                href="{{ url_for('auth.signup') }}"
+                class="flex-1 text-center bg-indigo-600 text-white ml-3 py-2 px-4 rounded-md font-medium"
+                >Kayıt Ol</a
+              >
+            </div>
+          </div>
+        </div>
+      </nav>
+      <section id="home" class="hero-gradient text-white pt-32 pb-20">
+        <div class="container mx-auto px-6 text-center">
+          <div data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+              Apartman Yönetimini Dijitale Taşıyın
+            </h1>
+            <p
+              class="text-lg md:text-xl text-indigo-200 mb-8 max-w-3xl mx-auto"
+            >
+              Aidat takibi, şeffaf finans yönetimi, duyurular ve talepler...
+              Hepsi tek bir platformda, bir tık uzağınızda.
+            </p>
+            <a
+              href="{{ url_for('auth.signup') }}"
+              class="bg-white text-indigo-600 font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition duration-300 text-lg shadow-lg transform hover:scale-105"
+            >
+              Hemen Ücretsiz Başlayın
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="py-20">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
+              Neden Apartman Yönetim Sistemi?
+            </h2>
+            <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
+              Yönetici ve sakinlerin hayatını kolaylaştıran, şeffaflığı ve
+              iletişimi artıran modern çözümler sunuyoruz.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            <div
+              class="bg-white p-8 rounded-xl shadow-lg text-center"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div
+                class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+              >
+                <i class="bi bi-cash-coin text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Kolay Aidat Takibi</h3>
+              <p class="text-gray-600">
+                Aidatları online takip edin, ödeme dekontlarını yükleyin ve
+                gecikmelerden anında haberdar olun.
+              </p>
+            </div>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-lg text-center"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div
+                class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+              >
+                <i class="bi bi-graph-up-arrow text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Şeffaf Finans Yönetimi</h3>
+              <p class="text-gray-600">
+                Tüm gelir ve giderleri anlık olarak görüntüleyin. Apartman
+                kasasının durumu her zaman gözünüzün önünde olsun.
+              </p>
+            </div>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-lg text-center"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div
+                class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+              >
+                <i class="bi bi-megaphone text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Etkili İletişim</h3>
+              <p class="text-gray-600">
+                Duyuru, anket ve talep modülleri ile yönetici ve sakinler
+                arasındaki iletişimi en üst düzeye çıkarın.
+              </p>
+            </div>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-lg text-center"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              <div
+                class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+              >
+                <i class="bi bi-shield-check text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Güvenli ve Erişilebilir</h3>
+              <p class="text-gray-600">
+                Tüm verileriniz güvende. İster cepten, ister tabletten, ister
+                bilgisayardan sisteme 7/24 ulaşın.
+              </p>
+            </div>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-lg text-center"
+              data-aos="fade-up"
+              data-aos-delay="500"
+            >
+              <div
+                class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+              >
+                <i class="bi bi-tools text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Hızlı Servis Erişimi</h3>
+              <p class="text-gray-600">
+                Arıza anında veya tadilat işlerinizde, yönetim tarafından
+                onaylanmış güvenilir ustalara tek tıkla ulaşın.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" class="bg-gray-100 py-20">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
+              3 Adımda Kolay Başlangıç
+            </h2>
+          </div>
+          <div
+            class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16"
+          >
+            <div class="text-center" data-aos="fade-right">
+              <div
+                class="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto shadow-lg border-4 border-indigo-200"
+              >
+                <span class="text-4xl font-bold text-indigo-600">1</span>
+              </div>
+              <h3 class="text-xl font-bold mt-4">Kayıt Ol</h3>
+              <p class="text-gray-600 mt-2">
+                Sisteme saniyeler içinde kaydolun ve apartmanınızı oluşturun.
+              </p>
+            </div>
+            <div class="text-center" data-aos="fade-up">
+              <div
+                class="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto shadow-lg border-4 border-indigo-200"
+              >
+                <span class="text-4xl font-bold text-indigo-600">2</span>
+              </div>
+              <h3 class="text-xl font-bold mt-4">Yönetmeye Başla</h3>
+              <p class="text-gray-600 mt-2">
+                Sakinleri davet edin, aidatları tanımlayın ve duyurularınızı
+                yayınlayın.
+              </p>
+            </div>
+            <div class="text-center" data-aos="fade-left">
+              <div
+                class="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto shadow-lg border-4 border-indigo-200"
+              >
+                <span class="text-4xl font-bold text-indigo-600">3</span>
+              </div>
+              <h3 class="text-xl font-bold mt-4">İletişimde Kal</h3>
+              <p class="text-gray-600 mt-2">
+                Gelen talepleri yanıtlayın, anketlerle ortak kararlar alın.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% if recent_posts %}
+      <section id="blog-preview" class="py-20">
+          <div class="container mx-auto px-6">
+              <div class="text-center mb-12" data-aos="fade-up">
+                  <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
+                      Blog'dan Son Yazılar
+                  </h2>
+                  <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
+                      Apartman ve site yönetimi dünyasındaki son gelişmeler, ipuçları ve yasal bilgilendirmeler.
+                  </p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {% for post in recent_posts %}
+                  <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                      <a href="{{ url_for('blog.view_post', slug=post.slug) }}">
+                          {% if post.image_url %}
+                              <img src="{{ post.image_url }}" alt="{{ post.title }}" class="h-56 w-full object-cover">
+                          {% else %}
+                        
+                              <div class="h-56 w-full bg-gray-200 flex items-center justify-center">
+                                  <i class="bi bi-image text-gray-400 text-4xl"></i>
+                              </div>
+                          {% endif %}
+                      </a>
+                      <div class="p-6 flex-grow flex flex-col">
+                          <h3 class="text-xl font-bold mb-3 flex-grow">
+                              <a href="{{ url_for('blog.view_post', slug=post.slug) }}" class="text-gray-800 hover:text-indigo-600 transition-colors">
+                                  {{ post.title }}
+                              </a>
+                          </h3>
+                          <div class="mt-auto text-sm text-gray-500">
+                              {{ post.created_at.strftime('%d %B %Y') }}
+                          </div>
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+              <div class="text-center mt-12">
+                  <a href="{{ url_for('blog.index') }}" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-700 transition duration-300 text-lg shadow-md transform hover:scale-105">
+                      Tüm Yazıları Gör
+                  </a>
+              </div>
+          </div>
+      </section>
+      {% endif %}
+
+      <div id="cookie-banner" class="fixed bottom-6 left-6 right-6 md:left-auto md:w-96 bg-white shadow-2xl rounded-2xl p-6 border border-gray-200 z-50 animate-slide-up hidden">
+        <h3 class="text-lg font-bold mb-2 text-gray-800">Çerezleri Kullanıyoruz 🍪</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          Deneyiminizi geliştirmek ve site performansını artırmak için çerezler kullanıyoruz.
+          Detaylar için
+          <a href="{{ url_for('public.privacy') }}" class="text-indigo-600 underline">
+            Gizlilik Politikası
+          </a>
+          sayfamıza göz atabilirsiniz.
+        </p>
+        <div class="flex justify-between items-center space-x-2">
+          <a href="{{ url_for('public.cookie_settings') }}" class="text-sm underline text-gray-700 hover:text-indigo-600">Tercihleri Yönet</a>
+          <div class="flex space-x-2">
+            <button id="cookie-accept" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+              Kabul Et
+            </button>
+            <button id="cookie-decline" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
+              Reddet
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <footer id="contact" class="bg-gray-800 text-gray-300 pt-16 pb-12">
+        <div class="container mx-auto px-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div class="col-span-1 md:col-span-1">
+              <a
+                href="{{ url_for('public.index') }}"
+                class="flex items-center mb-4"
+              >
+                <img
+                  src="{{ url_for('static', filename='images/logo.png') }}"
+                  alt="AYS Logo"
+                  class="h-8 mr-2"
+                />
+                <span class="text-white text-xl font-bold">AYS</span>
+              </a>
+              <p class="text-sm">
+                Apartman yaşamını dijitalleştiren, şeffaf ve kolay yönetim
+                platformu.
+              </p>
+
+              <div class="mt-4 flex items-center gap-4">
+                  <a href="https://play.google.com/store/apps/details?id=com.cy.flatnet"
+                    target="_blank" rel="noopener noreferrer"
+                    aria-label="Google Play'den indirin">
+                      <img src="https://img.icons8.com/fluency/48/google-play.png"
+                          alt="Google Play" class="h-8 w-auto">
+                  </a>
+
+                  <a href="#"
+                    class="opacity-60 pointer-events-none"
+                    aria-label="Huawei AppGallery (yakında)">
+                      <img src="https://img.icons8.com/color/48/huawei-app-gallery.png"
+                          alt="Huawei AppGallery (yakında)" class="h-8 w-auto">
+                  </a>
+
+                  <a href="#"
+                    class="opacity-60 pointer-events-none"
+                    aria-label="App Store (yakında)">
+                      <img src="https://img.icons8.com/fluency/48/apple-app-store.png"
+                          alt="App Store (yakında)" class="h-8 w-auto">
+                  </a>
+              </div>
+
+
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-4">Hızlı Bağlantılar</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a
+                    href="#features"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Özellikler</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#how-it-works"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Nasıl Çalışır?</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ url_for('auth.signup') }}"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Kayıt Ol</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-4">Yasal</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a
+                    href="{{ url_for('public.terms') }}"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Kullanım Şartları</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ url_for('public.privacy') }}"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Gizlilik Politikası</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ url_for('public.kvkk') }}"
+                    class="hover:text-indigo-400 transition-colors"
+                    >KVKK Metni</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ url_for('public.request_account_deletion') }}"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Hesap Silme Talebi</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ url_for('public.cookie_settings') }}"
+                    class="hover:text-indigo-400 transition-colors"
+                    >Çerez Tercihleri</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-4">İletişimde Kalın</h3>
+              <p class="text-sm mb-4">
+                Yeniliklerden haberdar olmak için bizi takip edin.
+              </p>
+              <div class="flex items-center space-x-4">
+                  <a href="https://www.youtube.com/@FlatNetSite" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity" title="YouTube'da FlatNetSite">
+                      <img src="https://img.icons8.com/fluency/48/youtube-play.png" alt="YouTube" width="32" height="32"/>
+                  </a>
+                  <a href="#" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity" title="Facebook'ta FlatNetSite">
+                      <img src="https://img.icons8.com/fluency/48/facebook-new.png" alt="Facebook" width="32" height="32"/>
+                  </a>
+                  <a href="https://www.instagram.com/flatnetsite/" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity" title="Instagram'da FlatNetSite">
+                      <img src="https://img.icons8.com/fluency/48/instagram-new.png" alt="Instagram" width="32" height="32"/>
+                  </a>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-gray-700 pt-8 text-center text-sm">
+            <p>&copy; {{ current_year }} FlatNetSite AYS. Tüm hakları saklıdır.</p>
+          </div>
+        </div>
+      </footer>
+
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+      <script>
+        AOS.init({
+          duration: 800,
+          once: true,
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const sections = document.querySelectorAll("section[id]");
+          const navLinks = document.querySelectorAll(".nav-link-landing");
+          function changeNav() {
+            let index = sections.length;
+            while (
+              --index &&
+              window.scrollY + 100 < sections[index].offsetTop
+            ) {}
+            navLinks.forEach((link) =>
+              link.classList.remove("nav-link-active")
+            );
+            const activeLink = document.querySelector(
+              `.nav-link-landing[data-target="${sections[index].id}"]`
+            );
+            if (activeLink) {
+              activeLink.classList.add("nav-link-active");
+            }
+          }
+          changeNav();
+          window.addEventListener("scroll", changeNav);
+        });
+
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const hamburgerIcon = document.getElementById("hamburger-icon");
+        const closeIcon = document.getElementById("close-icon");
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+          hamburgerIcon.classList.toggle("hidden");
+          closeIcon.classList.toggle("hidden");
+        });
+      </script>
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!localStorage.getItem("cookieConsent")) {
+          document.getElementById("cookie-banner").classList.remove("hidden");
+        }
+
+        document.getElementById("cookie-accept").addEventListener("click", function () {
+          localStorage.setItem("cookieConsent", "accepted");
+          document.getElementById("cookie-banner").classList.add("hidden");
+        });
+
+        document.getElementById("cookie-decline").addEventListener("click", function () {
+          localStorage.setItem("cookieConsent", "declined");
+          document.getElementById("cookie-banner").classList.add("hidden");
+        });
+      });
+      </script>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loaderOverlay = document.getElementById('loader-overlay');
+
+            const links = document.querySelectorAll('a');
+
+            links.forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    const href = link.getAttribute('href');
+
+                    if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:') && link.getAttribute('target') !== '_blank') {
+                        loaderOverlay.style.display = 'flex';
+                    }
+                });
+            });
+
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    loaderOverlay.style.display = 'none';
+                }
+            });
+        });
+    </script>
+  </body>
+</html>

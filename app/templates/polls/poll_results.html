@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title or "Anket Sonuçları" }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-bar-chart-line-fill me-2"></i>Anket Sonuçları
+                    </h4>
+                </div>
+                
+                <div class="card-body p-4">
+                    <!-- Anket Sorusu -->
+                    <div class="mb-4">
+                        <p class="fs-5"><strong>Soru:</strong></p>
+                        <h5 class="fw-normal">{{ poll.question }}</h5>
+                    </div>
+
+                    <hr>
+
+                    <!-- Toplam Oy Bilgisi -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0">Sonuçlar</h5>
+                        <span class="badge bg-secondary rounded-pill">Toplam {{ total_votes }} Oy Kullanıldı</span>
+                    </div>
+
+                    <!-- Sonuçlar için İlerleme Çubukları -->
+                    <div class="results-container">
+                        {% if results %}
+                            {% for result in results %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <strong>{{ result.text }}</strong>
+                                    <span>{{ result.vote_count }} Oy ({{ result.percentage }}%)</span>
+                                </div>
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar" 
+                                         role="progressbar" 
+                                         style="width: {{ result.percentage }}%;" 
+                                         aria-valuenow="{{ result.percentage }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ result.percentage }}%
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">Bu anket için henüz oy kullanılmamış.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-footer text-end bg-light">
+                    <a href="{{ url_for('poll.list_polls') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left-circle me-1"></i>Tüm Anketlere Geri Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

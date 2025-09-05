@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Yardım ve Destek{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  {# Bu sayfanın "resmi" adresinin bu olduğunu arama motorlarına söyler #}
+  <link rel="canonical" href="{{ url_for('public.help_page', _external=True) }}">
+{% endblock head %}
+
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="card p-4">
+
+    <h4>Yardım ve Destek</h4>
+    <p>
+      Apartman Yönetim Sistemi’ni kullanırken karşılaştığınız sorunlar veya sormak istediğiniz konular için
+      aşağıdaki rehber size yardımcı olabilir.
+    </p>
+
+    <hr>
+
+    <h5>1. Kayıt Olma</h5>
+    <ul>
+      <li>Formda gerekli tüm alanları eksiksiz doldurduğunuzdan emin olun.</li>
+      <li>Şifrelerinizin eşleştiğini kontrol edin.</li>
+      <li>
+        <a href="{{ url_for('public.terms_and_conditions') }}">Kullanım Şartları</a> ve
+        <a href="{{ url_for('public.privacy_policy') }}">Gizlilik Politikası</a> kutucuğunu işaretlemeniz
+        gerekmektedir.
+      </li>
+    </ul>
+
+    <h5>2. Giriş Yapamıyorum</h5>
+    <ul>
+      <li>E-posta adresinizi doğru yazdığınızdan emin olun.</li>
+      <li>Şifrenizi unuttuysanız “Şifremi Unuttum” bağlantısını kullanarak sıfırlayabilirsiniz.</li>
+    </ul>
+
+    <h5>3. Duyurular ve Bildirimler</h5>
+    <p>
+      Ana sayfada yöneticilerin yayınladığı tüm duyurulara ulaşabilirsiniz. Bildirim almak için e-posta adresinizi
+      güncel tutun.
+    </p>
+
+    <h5>4. Talep ve Şikayet Bildirme</h5>
+    <p>
+      Yöneticiye talep veya bildirimde bulunmak için sistem üzerindeki “Yeni Talep Oluştur” bölümünü kullanabilirsiniz.
+    </p>
+
+    <h5>5. Yardım Almak İçin</h5>
+    <p>Yukarıdaki konular dışında sorularınız için bize e-posta gönderebilirsiniz:</p>
+    <p>
+      <strong>Destek e-posta:</strong>
+      <a href="mailto:flatnetsite@gmail.com">flatnetsite@gmail.com</a>
+    </p>
+
+    <hr>
+
+    <p class="text-sm text-muted mt-3">
+      Gönderdiğiniz destek talepleri, <a href="{{ url_for('public.kvkk_text') }}">KVKK Aydınlatma Metni</a>
+      kapsamında işlenmekte ve gizlilik ilkelerimize uygun şekilde korunmaktadır.
+    </p>
+
+    <p><strong>Unutmayın:</strong> Platformu daha iyi hale getirmek için geri bildirimlerinize her zaman açığız!</p>
+
+  </div>
+</div>
+{% endblock %}

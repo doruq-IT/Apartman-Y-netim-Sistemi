@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0"><i class="bi bi-pencil-fill me-2"></i>Blog Yazılarını Yönet</h3>
+        <a href="{{ url_for('admin.add_post') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle-fill me-1"></i> Yeni Yazı Ekle
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if posts %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th class="text-center">Durum</th>
+                            <th>Oluşturulma Tarihi</th>
+                            <th class="text-end">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td><strong>{{ post.title }}</strong></td>
+                            <td class="text-center">
+                                {% if post.is_published %}
+                                    <span class="badge bg-success">Yayınlandı</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Taslak</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ post.created_at.strftime('%d %B %Y, %H:%M') }}</td>
+                            <td class="text-end">
+                                <a href="{{ url_for('admin.edit_post', post_id=post.id) }}" class="btn btn-outline-secondary btn-sm" title="Düzenle">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <form action="{{ url_for('admin.delete_post', post_id=post.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Bu yazıyı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.');">
+                                    {{ csrf_form.hidden_tag() }}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Sil">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center p-4">
+                <p class="text-muted">Henüz hiç blog yazısı oluşturulmamış.</p>
+                <a href="{{ url_for('admin.add_post') }}" class="btn btn-primary mt-2">
+                    <i class="bi bi-plus-circle-fill me-1"></i> İlk Yazınızı Ekleyin
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

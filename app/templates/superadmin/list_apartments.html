@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Apartman Yönetimi{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center card-header-responsive">
+                <h4 class="mb-0">
+                    <i class="bi bi-buildings-fill me-2"></i>Apartman / Site Yönetimi
+                </h4>
+                <a href="{{ url_for('superadmin.add_apartment') }}" class="btn btn-primary">
+                    <i class="bi bi-building-fill-add me-2"></i>Yeni Apartman Ekle
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if apartments %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Apartman / Site Adı</th>
+                                <th>Adres</th>
+                                <th class="text-center">Kayıtlı Sakin Sayısı</th>
+                                <th class="text-center">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for apt in apartments %}
+                            <tr>
+                                <th>{{ apt.id }}</th>
+                                <td><strong>{{ apt.name }}</strong></td>
+                                <td>{{ apt.address or 'Belirtilmemiş' }}</td>
+                                <td class="text-center">{{ apt.users.count() }}</td>
+                                <td class="text-center">
+                                    <form action="{{ url_for('superadmin.delete_apartment', apartment_id=apt.id) }}" method="POST" onsubmit="return confirm('`{{ apt.name }}` adlı apartmanı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-danger btn-sm" {% if apt.users.count() > 0 %}disabled title="İçinde kullanıcı olan bir apartman silinemez."{% endif %}>
+                                            <i class="bi bi-trash-fill"></i> Sil
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Henüz Apartman Kaydı Yok</h4>
+                    <p>Sistemde henüz oluşturulmuş bir apartman bulunmamaktadır.</p>
+                    <hr>
+                    <a href="{{ url_for('superadmin.add_apartment') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle-fill me-2"></i>İlk Apartmanı Oluştur
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

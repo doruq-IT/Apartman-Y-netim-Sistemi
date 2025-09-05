@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Yeni Şifre Belirle{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center bg-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-shield-lock-fill me-2"></i>Yeni Şifrenizi Belirleyin
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('auth.reset_token', token=token) }}" novalidate>
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <div class="mb-3">
+                                {{ form.password.label(class="form-label fw-bold") }}
+                                {% if form.password.errors %}
+                                    {{ form.password(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.password.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.password(class="form-control form-control-lg", placeholder="En az 8 karakter") }}
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.confirm_password.label(class="form-label fw-bold") }}
+                                {% if form.confirm_password.errors %}
+                                    {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.confirm_password.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.confirm_password(class="form-control form-control-lg", placeholder="Yeni şifrenizi doğrulayın") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="d-grid mt-3">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

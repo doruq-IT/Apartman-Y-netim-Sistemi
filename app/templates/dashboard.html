@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert welcome-alert shadow-sm">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-house-heart-fill h1 text-primary me-4"></i>
+            <div>
+                <h4 class="alert-heading fw-bold">Merhaba, {{ current_user.name }}!</h4>
+                <p class="mb-0 text-muted"><b>{{ current_user.apartment.name }}</b> Yönetim Sistemi'ne hoş geldiniz. İşlemlerinize aşağıdaki hızlı erişim menüsünden ulaşabilirsiniz.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4 text-center mb-5">
+        <div class="col">
+            <a href="{{ url_for('announcement.announcements') }}" class="quick-access-card">
+                <i class="bi bi-megaphone-fill display-4"></i>
+                <h5 class="mt-3">Duyurular</h5>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{{ url_for('resident.dues_list') }}" class="quick-access-card">
+                <i class="bi bi-cash-coin display-4"></i>
+                <h5 class="mt-3">Aidat Durumu</h5>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{{ url_for('resident_request.create_request') }}" class="quick-access-card">
+                <i class="bi bi-pencil-square display-4"></i>
+                <h5 class="mt-3">Yeni Talep</h5>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{{ url_for('resident_request.request_list') }}" class="quick-access-card">
+                <i class="bi bi-card-list display-4"></i>
+                <h5 class="mt-3">Taleplerim</h5>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{{ url_for('document.upload_document') }}" class="quick-access-card">
+                <i class="bi bi-file-earmark-arrow-up-fill display-4"></i>
+                <h5 class="mt-3">Belge Yükleme</h5>
+            </a>
+        </div>
+    </div>
+    <div class="row g-4">
+
+        <div class="col-6 col-md-4 col-lg-2 mb-4">
+            <a href="{{ url_for('poll.list_polls') }}" class="card text-center text-decoration-none h-100 shadow-sm dashboard-card">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="bi bi-patch-question-fill fs-1 text-primary"></i>
+                    <p class="card-text mt-2 mb-0 fw-bold">Anketler</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2 mb-4">
+            <a href="{{ url_for('resident.view_craftsmen') }}" class="card text-center text-decoration-none h-100 shadow-sm dashboard-card">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="bi bi-tools fs-1 text-primary"></i>
+                    <p class="card-text mt-2 mb-0 fw-bold">Usta Rehberi</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2 mb-4">
+            <a href="{{ url_for('resident.monthly_summary') }}" class="text-decoration-none">
+                <div class="card text-center text-white bg-success h-100 shadow-sm dashboard-card">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <i class="bi bi-cash-coin fs-1"></i>
+                        <p class="card-text mt-2 mb-0 fw-bold">Kasa Durumu</p>
+                        <span class="fw-bold mt-1">₺{{ "{:,.2f}".format(total_balance or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-cloud-sun-fill me-2"></i>Hava Durumu</h5>
+        </div>
+        <div class="card-body text-center p-0">
+            <a class="weatherwidget-io" href="https://forecast7.com/tr/39d5927d02/edremit/" data-label_1="EDREMIT" data-label_2="WEATHER" data-theme="original" >EDREMIT WEATHER</a>
+            <script>
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+            </script>
+        </div>
+    </div>
+    
+    {% if announcements %}
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-newspaper me-2"></i>Son Duyurular</h5>
+        </div>
+        <div class="list-group list-group-flush">
+            {% for ann in announcements %}
+            <a href="#" class="list-group-item list-group-item-action {% if ann.creator.role == 'admin' %}admin-announcement{% endif %}">
+
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        {{ ann.title }}
+                        {% if ann.creator.role == 'admin' %}
+                            <span class="badge bg-primary ms-2">Yönetim</span>
+                        {% endif %}
+                    </h5>
+                    <small class="text-muted">{{ ann.created_at.strftime('%d.%m.%Y') }}</small>
+                </div>
+                <p class="mb-1">{{ ann.content|truncate(150) }}</p>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="card-footer text-center">
+             <a href="{{ url_for('announcement.announcements') }}">Tüm Duyuruları Gör...</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4">
+        <i class="bi bi-info-circle-fill me-2"></i>Görüntülenecek güncel bir duyuru bulunmamaktadır.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

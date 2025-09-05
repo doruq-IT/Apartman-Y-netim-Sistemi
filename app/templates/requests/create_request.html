@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+          <h4 class="mb-0">
+            <i class="bi bi-pencil-square me-2"></i>Yeni Talep Oluştur
+          </h4>
+        </div>
+
+        <div class="card-body">
+          <form id="requestForm" method="POST" action="{{ url_for('resident_request.create_request') }}" enctype="multipart/form-data" novalidate>
+            {{ form.hidden_tag() }}
+
+            <!-- Başlık -->
+            <div class="mb-3">
+              {{ form.title.label(class="form-label") }}
+              {% if form.title.errors %}
+                {{ form.title(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.title.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.title(class="form-control") }}
+              {% endif %}
+            </div>
+
+            <!-- Açıklama -->
+            <div class="mb-3">
+              {{ form.description.label(class="form-label") }}
+              {% if form.description.errors %}
+                {{ form.description(class="form-control is-invalid", rows="6") }}
+                <div class="invalid-feedback">
+                  {% for error in form.description.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.description(class="form-control", rows="6") }}
+              {% endif %}
+            </div>
+
+            <!-- Kategori -->
+            <div class="mb-3">
+              {{ form.category.label(class="form-label") }}
+              {% if form.category.errors %}
+                {{ form.category(class="form-select is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.category.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.category(class="form-select") }}
+              {% endif %}
+            </div>
+
+            <!-- Öncelik -->
+            <div class="mb-3">
+              {{ form.priority.label(class="form-label") }}
+              {% if form.priority.errors %}
+                {{ form.priority(class="form-select is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.priority.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.priority(class="form-select") }}
+              {% endif %}
+            </div>
+
+            <!-- Konum -->
+            <div class="mb-3">
+              {{ form.location.label(class="form-label") }}
+              {% if form.location.errors %}
+                {{ form.location(class="form-select is-invalid", id="locationSelect") }}
+                <div class="invalid-feedback">
+                  {% for error in form.location.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.location(class="form-select", id="locationSelect") }}
+              {% endif %}
+            </div>
+
+            <!-- Diğer Konum -->
+            <div class="mb-3" id="locationOtherGroup" style="display:none;">
+              {{ form.location_other.label(class="form-label") }}
+              {% if form.location_other.errors %}
+                {{ form.location_other(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.location_other.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.location_other(class="form-control") }}
+              {% endif %}
+              <div class="form-text">Örn: B blok asansör önü, kapı giriş turnikesi…</div>
+            </div>
+
+            <!-- Dosya (opsiyonel) -->
+            <div class="mb-3">
+              {{ form.attachment.label(class="form-label", id="attachment-label") }}
+              
+              <div id="file-preview-container" class="alert alert-info p-2 d-flex justify-content-between align-items-center" style="display: none;">
+                <span id="file-name-display"></span>
+                <button type="button" id="remove-file-btn" class="btn-close" aria-label="Dosyayı kaldır"></button>
+              </div>
+
+              {% if form.attachment.errors %}
+                {{ form.attachment(class="form-control is-invalid", id="attachment", accept="image/*,application/pdf") }}
+                <div class="invalid-feedback">
+                  {% for error in form.attachment.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+              {% else %}
+                {{ form.attachment(class="form-control", id="attachment", accept="image/*,application/pdf") }}
+              {% endif %}
+              <div class="form-text">JPG/PNG/PDF, en fazla 5 MB.</div>
+            </div>
+
+            <!-- Uyarı alanı -->
+            <div id="uploadWarn" class="alert alert-warning" style="display:none;"></div>
+
+          </form>
+        </div>
+
+        <div class="card-footer bg-light text-end">
+          <a href="{{ url_for('resident_request.request_list') }}" class="btn btn-secondary">
+            <i class="bi bi-x-circle me-2"></i>Geri Dön
+          </a>
+          <button type="submit" form="requestForm" class="btn btn-primary" id="submitBtn">
+            <i class="bi bi-send-fill me-2"></i>Gönder
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress Overlay -->
+<div id="progressOverlay" style="display:none; position:fixed; inset:0; z-index:1050; background:rgba(255,255,255,.95);">
+  <div class="d-flex h-100 w-100 align-items-center justify-content-center flex-column">
+    <div class="mb-3 fw-semibold">Yükleniyor… Lütfen sayfayı kapatmayın.</div>
+    <div class="progress w-75" style="max-width:520px;">
+      <div id="progressBar" class="progress-bar" role="progressbar" style="width:0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // 'Diğer' konumu toggle (Bu kısım aynı kalıyor)
+    const select = document.getElementById('locationSelect');
+    const otherGroup = document.getElementById('locationOtherGroup');
+    const toggle = () => {
+      if (!select) return;
+      const val = select.value;
+      otherGroup.style.display = (val === 'diger') ? 'block' : 'none';
+    };
+    if (select) {
+      select.addEventListener('change', toggle);
+      toggle();
+    }
+  })();
+
+  (function () {
+    // --- Form ve Yükleme Mantığı (GÜNCELLENDİ) ---
+    const form = document.getElementById('requestForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const warn = document.getElementById('uploadWarn');
+    
+    // --- YENİ EKLENEN DOSYA YÖNETİMİ DEĞİŞKENLERİ ---
+    const fileInput = document.getElementById('attachment');
+    const fileLabel = document.getElementById('attachment-label');
+    const previewContainer = document.getElementById('file-preview-container');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const removeFileBtn = document.getElementById('remove-file-btn');
+    // --- ---
+
+    const overlay = document.getElementById('progressOverlay');
+    const bar = document.getElementById('progressBar');
+
+    const CLIENT_MAX = 5 * 1024 * 1024;
+    const TIMEOUT_MS = 20000;
+    let isUploading = false;
+    let timeoutId = null;
+    let xhr = null;
+
+    // --- YENİ EKLENEN DOSYA YÖNETİMİ FONKSİYONLARI ---
+    // Dosya seçildiğinde çalışır
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            fileNameDisplay.textContent = file.name;
+            previewContainer.style.display = 'flex';
+            fileInput.style.display = 'none'; // Dosya girişini gizle
+            fileLabel.style.display = 'none'; // Etiketi gizle
+        }
+    });
+
+    // "Kaldır" butonuna basıldığında çalışır
+    removeFileBtn.addEventListener('click', function() {
+        fileInput.value = ''; // Bu, seçili dosyayı temizler
+        previewContainer.style.display = 'none';
+        fileInput.style.display = 'block'; // Dosya girişini tekrar göster
+        fileLabel.style.display = 'block'; // Etiketi tekrar göster
+        hideWarn(); // Olası "dosya boyutu büyük" uyarısını temizle
+    });
+    // --- ---
+
+    // (Geri kalan tüm yardımcı fonksiyonlar - showOverlay, lockButton vb. - aynı kalabilir)
+    function showOverlay() { overlay.style.display = 'block'; updateProgress(0); }
+    function hideOverlay() { overlay.style.display = 'none'; }
+    function updateProgress(pct) { const val = Math.round(pct); bar.style.width = val + '%'; bar.textContent = val + '%'; bar.setAttribute('aria-valuenow', val); }
+    function lockButton() { submitBtn.disabled = true; submitBtn.dataset.originalHtml = submitBtn.innerHTML; submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Gönderiliyor…'; }
+    function unlockButton() { submitBtn.disabled = false; if (submitBtn.dataset.originalHtml) submitBtn.innerHTML = submitBtn.dataset.originalHtml; }
+    function showWarn(msg, isError = false) { warn.style.display = 'block'; warn.classList.remove('alert-warning','alert-danger'); warn.classList.add(isError ? 'alert-danger' : 'alert-warning'); warn.textContent = msg; }
+    function hideWarn() { warn.style.display = 'none'; }
+    function startTimeout() { clearTimeout(timeoutId); timeoutId = setTimeout(() => { if (xhr) xhr.abort(); }, TIMEOUT_MS); }
+    function clearAll() { clearTimeout(timeoutId); timeoutId = null; isUploading = false; xhr = null; hideOverlay(); unlockButton(); }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideWarn();
+
+      if (isUploading) return;
+
+      const f = fileInput.files[0];
+      if (f && f.size > CLIENT_MAX) {
+        showWarn('Dosya çok büyük. Lütfen 5 MB altı bir dosya yükleyin veya "Kaldır" butonuyla dosyayı değiştirin.', true);
+        return;
+      }
+
+      const action = form.getAttribute('action');
+      const formData = new FormData(form);
+
+      xhr = new XMLHttpRequest();
+      xhr.open('POST', action, true);
+
+      xhr.upload.onprogress = (evt) => { if (evt.lengthComputable) updateProgress((evt.loaded / evt.total) * 100); };
+      xhr.onloadstart = () => { isUploading = true; lockButton(); showOverlay(); updateProgress(0); startTimeout(); };
+      xhr.onerror = () => { clearAll(); showWarn('Bağlantı hatası oluştu. Tekrar deneyin.', true); };
+      xhr.onabort = () => { clearAll(); showWarn('Yükleme iptal edildi veya zaman aşımına uğradı.', true); };
+      
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+            window.location.href = "{{ url_for('resident_request.request_list') }}";
+        } else {
+            clearAll();
+            showWarn('İşlem tamamlanamadı (Sunucu yanıtı: ' + xhr.status + '). Lütfen tekrar deneyin.', true);
+        }
+      };
+
+      xhr.send(formData);
+    });
+
+    window.addEventListener('beforeunload', () => { if (xhr) xhr.abort(); clearTimeout(timeoutId); });
+  })();
+</script>
+{% endblock %}

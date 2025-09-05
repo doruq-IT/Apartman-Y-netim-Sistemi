@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yeni Aidat Bildirimi</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 600px; margin: 20px auto; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #198754; color: #fff; text-decoration: none; border-radius: 5px; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
+        .dues-details { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .amount { font-size: 1.5em; font-weight: bold; color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Yeni Aidat Borcu Tanımlandı</h3>
+        <p>Merhaba {{ resident_name }},</p>
+        <p>
+            Adınıza yeni bir aidat borcu tanımlanmıştır. Detaylar aşağıdadır:
+        </p>
+        
+        <div class="dues-details">
+            <p><strong>Açıklama:</strong> {{ dues.description }}</p>
+            <p><strong>Tutar:</strong> <span class="amount">{{ "%.2f"|format(dues.amount) }} TL</span></p>
+            <p><strong>Son Ödeme Tarihi:</strong> {{ dues.due_date.strftime('%d %B %Y') }}</p>
+        </div>
+        
+        <p>
+            Tüm borçlarınızı görmek ve ödeme dekontu yüklemek için lütfen aşağıdaki butona tıklayarak sisteme giriş yapın:
+        </p>
+        
+        <p>
+            <a href="{{ url_for('resident.dues_list', _external=True) }}" class="button">
+                Aidat Borçlarımı Gör
+            </a>
+        </p>
+        
+        <p class="footer">
+            Bu e-posta, Apartman Yönetim Sistemi tarafından otomatik olarak gönderilmiştir.
+        </p>
+    </div>
+</body>
+</html>

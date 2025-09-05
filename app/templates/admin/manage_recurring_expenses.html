@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "_form_macros.html" import render_field %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Yeni Otomatik Gider Kuralı Tanımla</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text text-muted small">
+                Burada tanımladığınız kurallar (örn: Aylık Aidat), belirttiğiniz günde tüm sakinler için otomatik olarak oluşturulacaktır.
+            </p>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ render_field(form.description) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field(form.amount) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ render_field(form.day_of_month) }}
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center pt-3">
+                        <div class="form-check form-switch">
+                            {{ form.is_active(class="form-check-input") }}
+                            {{ form.is_active.label(class="form-check-label") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Tanımlanmış Kurallar</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if rules %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-3">Açıklama</th>
+                            <th scope="col" class="text-end">Tutar</th>
+                            <th scope="col" class="text-center">Çalışma Günü</th>
+                            <th scope="col" class="text-center">Durum</th>
+                            <th scope="col" class="text-center">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rule in rules %}
+                        <tr>
+                            <td class="ps-3"><strong>{{ rule.description }}</strong></td>
+                            <td class="text-end fw-bold">₺{{ "%.2f"|format(rule.amount) }}</td>
+                            <td class="text-center">Her Ayın {{ rule.day_of_month }}. günü</td>
+                            <td class="text-center">
+                                {% if rule.is_active %}
+                                    <span class="badge bg-success">Aktif</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Pasif</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-secondary" disabled>Düzenle</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info text-center m-3">
+                Henüz tanımlanmış bir otomatik gider kuralı bulunmamaktadır.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

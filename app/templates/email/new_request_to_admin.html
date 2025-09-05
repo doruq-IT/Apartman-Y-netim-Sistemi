@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yeni Talep/Şikayet Bildirimi</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 600px; margin: 20px auto; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Yeni Bir Talep/Şikayet Aldınız</h3>
+        <p>Merhaba Yönetici,</p>
+        <p>
+            <strong>{{ resident_name }}</strong> adlı sakin, aşağıdaki başlıkla yeni bir talep oluşturdu:
+        </p>
+        
+        <h4 style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #007bff;">
+            {{ request_title }}
+        </h4>
+        
+        <p>
+            Talebi incelemek, yanıtlamak ve durumunu güncellemek için lütfen aşağıdaki butona tıklayarak yönetim paneline gidin:
+        </p>
+        
+        <p>
+            <a href="{{ url_for('admin.reply_request', request_id=request_id, _external=True) }}" class="button">
+                Talebi Görüntüle
+            </a>
+        </p>
+        
+        <p class="footer">
+            Bu e-posta, Apartman Yönetim Sistemi tarafından otomatik olarak gönderilmiştir.
+        </p>
+    </div>
+</body>
+</html>

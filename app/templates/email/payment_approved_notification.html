@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ödemeniz Onaylandı</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 600px; margin: 20px auto; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #198754; color: #fff; text-decoration: none; border-radius: 5px; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
+        .approval-box { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; padding: 15px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .approval-box h4 { margin: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Ödemeniz Başarıyla Onaylandı!</h3>
+        <p>Merhaba {{ resident_name }},</p>
+        <p>
+            Yönetim tarafından yapılan inceleme sonucunda, aşağıdaki aidat borcu için yaptığınız ödeme onaylanmıştır:
+        </p>
+        
+        <div class="approval-box">
+            <h4>"{{ dues_description }}"</h4>
+            <p class="mb-0">adlı aidat borcunuz ödenmiştir.</p>
+        </div>
+        
+        <p>
+            Bu ödeme ile ilgili artık herhangi bir borcunuz bulunmamaktadır. Ödeme yaptığınız için teşekkür ederiz.
+        </p>
+        
+        <p>
+            Tüm finansal dökümünüzü görmek için sisteme giriş yapabilirsiniz:
+        </p>
+        
+        <p>
+            <a href="{{ url_for('resident.dues_list', _external=True) }}" class="button">
+                Hesabımı Görüntüle
+            </a>
+        </p>
+        
+        <p class="footer">
+            Bu e-posta, Apartman Yönetim Sistemi tarafından otomatik olarak gönderilmiştir.
+        </p>
+    </div>
+</body>
+</html>

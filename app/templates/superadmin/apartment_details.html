@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">{{ title }}</h2>
+        <a href="{{ url_for('superadmin.list_apartments') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Apartman Listesine Geri Dön
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Apartman Bilgileri</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Adres:</strong> {{ apartment.address or 'Belirtilmemiş' }}</p>
+            <p><strong>Oluşturulma Tarihi:</strong> {{ apartment.created_at.strftime('%d.%m.%Y') }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Bu Apartmandaki Sakinler ({{ residents|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if residents %}
+                        <ul class="list-group list-group-flush">
+                            {% for resident in residents %}
+                                <li class="list-group-item">{{ resident.name }} {{ resident.surname }} ({{ resident.email }})</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Bu apartmana kayıtlı sakin bulunmuyor.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Bu Apartmandaki Ortak Alanlar ({{ common_areas|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if common_areas %}
+                        <ul class="list-group list-group-flush">
+                            {% for area in common_areas %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ area.name }}
+                                    {% if area.is_active %}
+                                        <span class="badge bg-success">Aktif</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Pasif</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Bu apartmana tanımlı ortak alan bulunmuyor.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
